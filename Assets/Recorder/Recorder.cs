@@ -9,7 +9,6 @@ namespace Recorder
     /// <summary>
     /// Add this component to a GameObject to Record Mic Input 
     /// </summary>
-    [AddComponentMenu("AhmedSchrute/Recorder")]
     [RequireComponent(typeof(AudioSource))]
     public class Recorder : MonoBehaviour
     {
@@ -27,6 +26,11 @@ namespace Recorder
         /// </summary>
         const int HEADER_SIZE = 44;
 
+        /// <summary>
+        /// Is Recording
+        /// </summary>
+        public static bool isRecording = false;
+
         #endregion
 
         #region Editor Exposed Variables
@@ -37,9 +41,22 @@ namespace Recorder
         [Tooltip("Set a keyboard key for saving the Audio File")]
         public KeyCode keyCode;
         /// <summary>
+        /// Show the Recording status on the screen 
+        /// </summary>
+        public Text RecordingStatus;
+        /// <summary>
+        /// Set a Button to trigger recording of the Audio 
+        /// </summary>
+        public Button RecordButton;
+        /// <summary>
         /// Set a Button to trigger writing the WAV file and Saving the Audio 
         /// </summary>
         public Button SaveButton;
+        /// <summary>
+        /// Set max duration of the audio file in seconds
+        /// </summary>
+        [Tooltip("Set max duration of the audio file in seconds")]
+        public int timeToRecord = 30;
         /// <summary>
         /// What should the saved file name be, the file will be saved in Streaming Assets Directory
         /// </summary>
@@ -53,14 +70,26 @@ namespace Recorder
         void Start()
         {
             audioSource = GetComponent<AudioSource>();
-            audioSource.clip = Microphone.Start(Microphone.devices[0], true, 10, 44100);
+
+            isRecording = false;
+            RecordingStatus.text = "Not Recording";
+
+            if (RecordButton == null)
+            {
+                return;
+            }
+            RecordButton.onClick.AddListener(() =>
+            {
+                StartRecording();
+            });
+
             if (SaveButton == null)
             {
                 return;
             }
             SaveButton.onClick.AddListener(() =>
             {
-                Save();
+                SaveRecording();
             });
         }
 
@@ -68,7 +97,23 @@ namespace Recorder
         {
             if (Input.GetKeyDown(keyCode))
             {
-                Save();
+                if (isRecording)
+                {
+                    SaveRecording();
+                }
+                else
+                {
+                    StartRecording();
+                }
+            }
+
+            if (isRecording)
+            {
+                RecordingStatus.text = "Recording";
+            }
+            else
+            {
+                RecordingStatus.text = "Not Recording";
             }
         }
 
@@ -76,13 +121,21 @@ namespace Recorder
 
         #region Recorder Functions
 
-        public static void Save(string fileName = "test")
+        public void StartRecording()
         {
+            Microphone.End(Microphone.devices[0]);
+            audioSource.clip = Microphone.Start(Microphone.devices[0], true, timeToRecord, 44100);
 
+            isRecording = true;
+        }
+
+        public static void SaveRecording(string fileName = "AudioTest")
+        {
             while (!(Microphone.GetPosition(null) > 0)) { }
             samplesData = new float[audioSource.clip.samples * audioSource.clip.channels];
             audioSource.clip.GetData(samplesData, 0);
             string filePath = Path.Combine(Application.streamingAssetsPath, fileName + ".wav");
+
             // Delete the file if it exists.
             if (File.Exists(filePath))
             {
@@ -97,7 +150,9 @@ namespace Recorder
             {
                 Debug.LogError("Please, Create a StreamingAssets Directory in the Assets Folder");
             }
-           
+
+            isRecording = false;
+            Microphone.End(Microphone.devices[0]);
         }
 
         public static byte[] ConvertWAVtoByteArray(string filePath)
@@ -194,7 +249,7 @@ namespace Recorder
                     byteArr = BitConverter.GetBytes(intData[i]);
                     byteArr.CopyTo(bytesData, i * 2);
                 }
-                
+
                 fs.Write(bytesData, 0, bytesData.Length);
             }
         }

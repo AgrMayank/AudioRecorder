@@ -124,7 +124,7 @@ namespace Recorder
         public void StartRecording()
         {
             Microphone.End(Microphone.devices[0]);
-            audioSource.clip = Microphone.Start(Microphone.devices[0], true, timeToRecord, 44100);
+            audioSource.clip = Microphone.Start(Microphone.devices[0], false, timeToRecord, 44100);
 
             isRecording = true;
         }

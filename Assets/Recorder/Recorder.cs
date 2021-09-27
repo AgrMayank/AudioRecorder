@@ -134,6 +134,11 @@ namespace Recorder
                 }
             }
 
+            if (recordingTime >= timeToRecord)
+            {
+                SaveRecording();
+            }
+
             if (isRecording)
             {
                 ConsoleText.text = "";

@@ -3,6 +3,7 @@ using System.IO;
 using System.Text;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.iOS;
 
 namespace Recorder
 {
@@ -69,6 +70,20 @@ namespace Recorder
 
         void Start()
         {
+            // Request iOS Microphone permission
+            Application.RequestUserAuthorization(UserAuthorization.Microphone);
+
+            // Check iOS Microphone permission
+            if (Application.HasUserAuthorization(UserAuthorization.Microphone))
+            {
+                Debug.Log("Microphone found");
+            }
+            else
+            {
+                Debug.Log("Microphone not found");
+            }
+
+            // Get the AudioSource component
             audioSource = GetComponent<AudioSource>();
 
             isRecording = false;

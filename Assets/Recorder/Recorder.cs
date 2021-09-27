@@ -58,11 +58,6 @@ namespace Recorder
         /// </summary>
         [Tooltip("Set max duration of the audio file in seconds")]
         public int timeToRecord = 30;
-        /// <summary>
-        /// What should the saved file name be, the file will be saved in Streaming Assets Directory
-        /// </summary>
-        [Tooltip("What should the saved file name be, the file will be saved in Streaming Assets Directory, Don't add .wav at the end")]
-        public string fileName;
 
         #endregion
 
@@ -148,7 +143,7 @@ namespace Recorder
             isRecording = true;
         }
 
-        public static void SaveRecording(string fileName = "Audio Test")
+        public static void SaveRecording(string fileName = "Audio")
         {
             while (!(Microphone.GetPosition(null) > 0)) { }
             samplesData = new float[audioSource.clip.samples * audioSource.clip.channels];

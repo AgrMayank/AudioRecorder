@@ -3,8 +3,11 @@ using System.IO;
 using System.Text;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.iOS;
 using TMPro;
+
+#if UNITY_IOS
+using UnityEngine.iOS;
+#endif
 
 namespace Recorder
 {

@@ -125,10 +125,14 @@ namespace Recorder
             if (isRecording)
             {
                 RecordingStatus.text = "Recording";
+                RecordButton.gameObject.SetActive(false);
+                SaveButton.gameObject.SetActive(true);
             }
             else
             {
                 RecordingStatus.text = "Not Recording";
+                RecordButton.gameObject.SetActive(true);
+                SaveButton.gameObject.SetActive(false);
             }
         }
 

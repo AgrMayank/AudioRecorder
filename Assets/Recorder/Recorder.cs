@@ -144,12 +144,12 @@ namespace Recorder
             isRecording = true;
         }
 
-        public static void SaveRecording(string fileName = "AudioTest")
+        public static void SaveRecording(string fileName = "Audio Test")
         {
             while (!(Microphone.GetPosition(null) > 0)) { }
             samplesData = new float[audioSource.clip.samples * audioSource.clip.channels];
             audioSource.clip.GetData(samplesData, 0);
-            string filePath = Path.Combine(Application.streamingAssetsPath, fileName + ".wav");
+            string filePath = Path.Combine(Application.persistentDataPath, fileName + " " + DateTime.UtcNow.ToString("yyyy_MM_dd HH_mm_ss_ffff") + ".wav");
 
             // Delete the file if it exists.
             if (File.Exists(filePath))
@@ -159,11 +159,11 @@ namespace Recorder
             try
             {
                 WriteWAVFile(audioSource.clip, filePath);
-                Debug.Log("File Saved Successfully at StreamingAssets/" + fileName + ".wav");
+                Debug.Log("File Saved Successfully at " + filePath);
             }
             catch (DirectoryNotFoundException)
             {
-                Debug.LogError("Please, Create a StreamingAssets Directory in the Assets Folder");
+                Debug.LogError("Persistent Data Path not found!");
             }
 
             isRecording = false;

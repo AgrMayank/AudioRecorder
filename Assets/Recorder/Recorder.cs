@@ -4,6 +4,7 @@ using System.Text;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.iOS;
+using TMPro;
 
 namespace Recorder
 {
@@ -27,10 +28,22 @@ namespace Recorder
         /// </summary>
         const int HEADER_SIZE = 44;
 
+        #endregion
+
+        #region Private Variables
+
         /// <summary>
         /// Is Recording
         /// </summary>
         public static bool isRecording = false;
+        /// <summary>
+        /// Recording Time
+        /// </summary>
+        private float recordingTime = 0f;
+        /// <summary>
+        /// Recording Time Minute and Seconds
+        /// </summary>
+        private int minute = 0, second = 0;
 
         #endregion
 
@@ -42,9 +55,13 @@ namespace Recorder
         [Tooltip("Set a keyboard key for saving the Audio File")]
         public KeyCode keyCode;
         /// <summary>
-        /// Show the Recording status on the screen 
+        /// Show the Filepath on the screen, etc 
         /// </summary>
-        public Text RecordingStatus;
+        public TMP_Text ConsoleText;
+        /// <summary>
+        /// Show the Recording Time on the screen
+        /// </summary>
+        public TMP_Text RecordingTimeText;
         /// <summary>
         /// Set a Button to trigger recording of the Audio 
         /// </summary>
@@ -82,7 +99,7 @@ namespace Recorder
             audioSource = GetComponent<AudioSource>();
 
             isRecording = false;
-            RecordingStatus.text = "Not Recording";
+            ConsoleText.text = "";
 
             if (RecordButton == null)
             {
@@ -119,13 +136,40 @@ namespace Recorder
 
             if (isRecording)
             {
-                RecordingStatus.text = "Recording";
+                ConsoleText.text = "";
+                recordingTime += Time.deltaTime;
+
+                minute = (int)(recordingTime / 60);
+                second = (int)(recordingTime % 60);
+
+                if (minute < 10)
+                {
+                    if (second < 10)
+                    {
+                        RecordingTimeText.text = "0" + minute + ":0" + second;
+                    }
+                    else
+                    {
+                        RecordingTimeText.text = "0" + minute + ":" + second;
+                    }
+                }
+                else if (second < 10)
+                {
+                    RecordingTimeText.text = minute + ":0" + second;
+                }
+                else
+                {
+                    RecordingTimeText.text = minute + ":" + second;
+                }
+
                 RecordButton.gameObject.SetActive(false);
                 SaveButton.gameObject.SetActive(true);
             }
             else
             {
-                RecordingStatus.text = "Not Recording";
+                recordingTime = 0f;
+                RecordingTimeText.text = "00:00";
+
                 RecordButton.gameObject.SetActive(true);
                 SaveButton.gameObject.SetActive(false);
             }
@@ -143,7 +187,7 @@ namespace Recorder
             isRecording = true;
         }
 
-        public static void SaveRecording(string fileName = "Audio")
+        public void SaveRecording(string fileName = "Audio")
         {
             while (!(Microphone.GetPosition(null) > 0)) { }
             samplesData = new float[audioSource.clip.samples * audioSource.clip.channels];
@@ -158,6 +202,7 @@ namespace Recorder
             try
             {
                 WriteWAVFile(audioSource.clip, filePath);
+                ConsoleText.text = "Audio Saved at: " + filePath;
                 Debug.Log("File Saved Successfully at " + filePath);
             }
             catch (DirectoryNotFoundException)

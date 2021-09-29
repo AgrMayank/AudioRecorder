@@ -1,7 +1,9 @@
 ﻿using System;
 using System.IO;
 using System.Text;
+using System.Linq;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -171,7 +173,6 @@ namespace Recorder
             }
             else
             {
-                recordingTime = 0f;
                 RecordingTimeText.text = "00:00";
 
                 RecordImage.gameObject.SetActive(true);
@@ -206,7 +207,7 @@ namespace Recorder
 
         void IPointerUpHandler.OnPointerUp(PointerEventData eventData)
         {
-            if (holdToRecord && isRecording)
+            if (holdToRecord)
                 SaveRecording();
         }
 
@@ -232,41 +233,60 @@ namespace Recorder
 
         public void StartRecording()
         {
+            recordingTime = 0f;
+            isRecording = true;
+
             StartCoroutine(ScaleOverTime(RecordButton.gameObject, 1.2f));
 
             Microphone.End(Microphone.devices[0]);
             audioSource.clip = Microphone.Start(Microphone.devices[0], false, timeToRecord, 44100);
-
-            isRecording = true;
         }
 
         public void SaveRecording(string fileName = "Audio")
         {
-            StartCoroutine(ScaleOverTime(RecordButton.gameObject, 1f));
-
-            while (!(Microphone.GetPosition(null) > 0)) { }
-            samplesData = new float[audioSource.clip.samples * audioSource.clip.channels];
-            audioSource.clip.GetData(samplesData, 0);
-            string filePath = Path.Combine(Application.persistentDataPath, fileName + " " + DateTime.UtcNow.ToString("yyyy_MM_dd HH_mm_ss_ffff") + ".wav");
-
-            // Delete the file if it exists.
-            if (File.Exists(filePath))
+            if (isRecording)
             {
-                File.Delete(filePath);
-            }
-            try
-            {
-                WriteWAVFile(audioSource.clip, filePath);
-                ConsoleText.text = "Audio Saved at: " + filePath;
-                Debug.Log("File Saved Successfully at " + filePath);
-            }
-            catch (DirectoryNotFoundException)
-            {
-                Debug.LogError("Persistent Data Path not found!");
-            }
+                StartCoroutine(ScaleOverTime(RecordButton.gameObject, 1f));
 
-            isRecording = false;
-            Microphone.End(Microphone.devices[0]);
+                while (!(Microphone.GetPosition(null) > 0)) { }
+                samplesData = new float[audioSource.clip.samples * audioSource.clip.channels];
+                audioSource.clip.GetData(samplesData, 0);
+
+                // Trim the silence at the end of the recording
+                var samples = samplesData.ToList();
+                int recordedSamples = (int)(samplesData.Length * (recordingTime / (float)timeToRecord));
+
+                if (recordedSamples < samplesData.Length - 1)
+                {
+                    samples.RemoveRange(recordedSamples, samplesData.Length - recordedSamples);
+                    samplesData = samples.ToArray();
+                }
+
+                // Create the audio file after removing the silence
+                AudioClip audioClip = AudioClip.Create(fileName, samplesData.Length, audioSource.clip.channels, 44100, false);
+                audioClip.SetData(samplesData, 0);
+
+                string filePath = Path.Combine(Application.persistentDataPath, fileName + " " + DateTime.UtcNow.ToString("yyyy_MM_dd HH_mm_ss_ffff") + ".wav");
+
+                // Delete the file if it exists.
+                if (File.Exists(filePath))
+                {
+                    File.Delete(filePath);
+                }
+                try
+                {
+                    WriteWAVFile(audioClip, filePath);
+                    ConsoleText.text = "Audio Saved at: " + filePath;
+                    Debug.Log("File Saved Successfully at " + filePath);
+                }
+                catch (DirectoryNotFoundException)
+                {
+                    Debug.LogError("Persistent Data Path not found!");
+                }
+
+                isRecording = false;
+                Microphone.End(Microphone.devices[0]);
+            }
         }
 
         public static byte[] ConvertWAVtoByteArray(string filePath)

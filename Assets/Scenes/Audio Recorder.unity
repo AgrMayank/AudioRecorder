@@ -259,7 +259,7 @@ MonoBehaviour:
   RecordButton: {fileID: 558215100}
   RecordImage: {fileID: 1147838525}
   SaveImage: {fileID: 236742136}
-  timeToRecord: 10
+  timeToRecord: 5
   holdToRecord: 1
 --- !u!114 &558215100
 MonoBehaviour:

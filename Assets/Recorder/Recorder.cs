@@ -1,9 +1,12 @@
 ﻿using System;
 using System.IO;
 using System.Text;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.Events;
+using UnityEngine.EventSystems;
 
 #if UNITY_IOS
 using UnityEngine.iOS;
@@ -14,10 +17,11 @@ namespace Recorder
     /// <summary>
     /// Add this component to a GameObject to Record Mic Input 
     /// </summary>
-    [RequireComponent(typeof(AudioSource))]
-    public class Recorder : MonoBehaviour
+    [RequireComponent(typeof(AudioSource), typeof(EventTrigger))]
+    public class Recorder : MonoBehaviour, IPointerClickHandler, IPointerDownHandler, IPointerUpHandler
     {
         #region Constants &  Static Variables
+
         /// <summary>
         /// Audio Source to store Microphone Input, An AudioSource Component is required by default
         /// </summary>
@@ -66,18 +70,23 @@ namespace Recorder
         /// </summary>
         public TMP_Text RecordingTimeText;
         /// <summary>
-        /// Set a Button to trigger recording of the Audio 
+        /// Set a Button to trigger recording or saving the Audio WAV file 
         /// </summary>
         public Button RecordButton;
         /// <summary>
-        /// Set a Button to trigger writing the WAV file and Saving the Audio 
+        /// Record or Save Image for the Record Button
         /// </summary>
-        public Button SaveButton;
+        public Image RecordImage, SaveImage;
         /// <summary>
         /// Set max duration of the audio file in seconds
         /// </summary>
         [Tooltip("Set max duration of the audio file in seconds")]
         public int timeToRecord = 30;
+        /// <summary>
+        /// Hold Button to Record
+        /// </summary>
+        [Tooltip("Press and Hold Record button to Record")]
+        public bool holdToRecord = false;
 
         #endregion
 
@@ -108,24 +117,11 @@ namespace Recorder
             {
                 return;
             }
-            RecordButton.onClick.AddListener(() =>
-            {
-                StartRecording();
-            });
-
-            if (SaveButton == null)
-            {
-                return;
-            }
-            SaveButton.onClick.AddListener(() =>
-            {
-                SaveRecording();
-            });
         }
 
         private void Update()
         {
-            if (Input.GetKeyDown(keyCode))
+            if (Input.GetKeyDown(keyCode) && !holdToRecord)
             {
                 if (isRecording)
                 {
@@ -170,17 +166,64 @@ namespace Recorder
                     RecordingTimeText.text = minute + ":" + second;
                 }
 
-                RecordButton.gameObject.SetActive(false);
-                SaveButton.gameObject.SetActive(true);
+                RecordImage.gameObject.SetActive(false);
+                SaveImage.gameObject.SetActive(true);
             }
             else
             {
                 recordingTime = 0f;
                 RecordingTimeText.text = "00:00";
 
-                RecordButton.gameObject.SetActive(true);
-                SaveButton.gameObject.SetActive(false);
+                RecordImage.gameObject.SetActive(true);
+                SaveImage.gameObject.SetActive(false);
             }
+        }
+
+        #endregion
+
+        #region Other Functions
+
+        public virtual void OnPointerClick(PointerEventData eventData)
+        {
+            if (!holdToRecord)
+            {
+                if (isRecording)
+                {
+                    SaveRecording();
+                }
+                else
+                {
+                    StartRecording();
+                }
+            }
+        }
+
+        void IPointerDownHandler.OnPointerDown(PointerEventData eventData)
+        {
+            if (holdToRecord)
+                StartRecording();
+        }
+
+        void IPointerUpHandler.OnPointerUp(PointerEventData eventData)
+        {
+            if (holdToRecord && isRecording)
+                SaveRecording();
+        }
+
+        IEnumerator ScaleOverTime(GameObject button, float scaleFactor)
+        {
+            Vector3 originalScale = button.transform.localScale;
+            Vector3 destinationScale = new Vector3(scaleFactor, scaleFactor, scaleFactor);
+
+            float currentTime = 0.0f;
+
+            do
+            {
+                button.transform.localScale = Vector3.Lerp(originalScale, destinationScale, currentTime / 0.5f);
+                currentTime += Time.deltaTime;
+                yield return null;
+            }
+            while (currentTime <= 1f);
         }
 
         #endregion
@@ -189,6 +232,8 @@ namespace Recorder
 
         public void StartRecording()
         {
+            StartCoroutine(ScaleOverTime(RecordButton.gameObject, 1.2f));
+
             Microphone.End(Microphone.devices[0]);
             audioSource.clip = Microphone.Start(Microphone.devices[0], false, timeToRecord, 44100);
 
@@ -197,6 +242,8 @@ namespace Recorder
 
         public void SaveRecording(string fileName = "Audio")
         {
+            StartCoroutine(ScaleOverTime(RecordButton.gameObject, 1f));
+
             while (!(Microphone.GetPosition(null) > 0)) { }
             samplesData = new float[audioSource.clip.samples * audioSource.clip.channels];
             audioSource.clip.GetData(samplesData, 0);

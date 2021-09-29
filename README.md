@@ -11,7 +11,7 @@ Record & Save Audio Files with Unity
 - [x] Day & Night Modes.
 - [x] Record Time Indicators.
 - [x] Recorded File Location Indicator.
-- [ ] Dynamic Audio Record Time.
+- [x] Dynamic Audio Record Time.
 - [x] Support for Android, iOS, MacOS, Windows and more.
 
 ## Options

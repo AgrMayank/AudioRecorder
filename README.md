@@ -1,5 +1,8 @@
 # AudioRecorder
-Record & Save Audio Files in Unity
+Record & Save Audio Files with Unity
+
+## Preview
+![Audio Recorder](https://user-images.githubusercontent.com/26793209/134897859-066e452d-6fb6-498c-b2f4-3aabd40b1ccc.gif)
 
 ## Features
 - [x] Click _Record_ Button to Start/Stop Recording.
@@ -12,10 +15,8 @@ Record & Save Audio Files in Unity
 - [x] Support for Android, iOS, MacOS, Windows and more.
 
 ## Options
-![image](https://user-images.githubusercontent.com/26793209/135224553-4bc6b1ac-a35d-4a85-bfe8-8201612d4e38.png)
 - Change the _Key Code_ used to Record Audio.
 - Set the Max _Time to Record_ Audio.
 - Enable or Disable _Hold to Record_ feature. [__NOTE:__ _Key Code & Click to record will be disabled when using this feature._]
 
-## Preview
-![Audio Recorder](https://user-images.githubusercontent.com/26793209/134897859-066e452d-6fb6-498c-b2f4-3aabd40b1ccc.gif)
+![Screenshot 2021-09-29 130621](https://user-images.githubusercontent.com/26793209/135225334-8cda010a-a37e-4438-b3a5-3d7bd423fb7b.png)

@@ -14,16 +14,17 @@ Record & Save Audio Files with Unity
 - Download and unzip the Source Code and build it for your desired platform.
 
 ## Preview
-![Audio Recorder](https://user-images.githubusercontent.com/26793209/134897859-066e452d-6fb6-498c-b2f4-3aabd40b1ccc.gif)
+https://user-images.githubusercontent.com/26793209/135424540-182ee28c-0f1a-4c83-893b-3898262aab27.mp4
 
 ## Features
 - [x] Click _Record_ Button to Start/Stop Recording.
 - [x] Press and Hold _Record_ Button to Record. Unpress to Save File.
 - [x] Record using _KeyPress_ Shortcuts.
-- [x] Day & Night Modes.
 - [x] Record Time Indicators.
+- [x] Dynamic Audio Record Time (Trim the Silence in the End).
 - [x] Recorded File Location Indicator.
-- [x] Dynamic Audio Record Time.
+- [x] Audio Player to Play/Pause the Last Recorded File.
+- [x] Day & Night Mode Toggles.
 - [x] Support for Android, iOS, MacOS, Windows and more.
 
 ## Options
@@ -31,4 +32,4 @@ Record & Save Audio Files with Unity
 - Set the Max _Time to Record_ Audio.
 - Enable or Disable _Hold to Record_ feature. [__NOTE:__ _Key Code & Click to record will be disabled when using this feature._]
 
-![Screenshot 2021-09-29 130621](https://user-images.githubusercontent.com/26793209/135225334-8cda010a-a37e-4438-b3a5-3d7bd423fb7b.png)
+![image](https://user-images.githubusercontent.com/26793209/135421299-1be46c08-f7d0-4cb6-b3c3-729b11f3ea58.png)

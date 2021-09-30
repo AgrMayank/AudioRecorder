@@ -64,6 +64,11 @@ namespace Recorder
         [Tooltip("Set a keyboard key for saving the Audio File")]
         public KeyCode keyCode;
         /// <summary>
+        /// Audio Player Script for Playing Audio Files
+        /// </summary>
+        [Tooltip("Audio Player Script for Playing Audio Files")]
+        public AudioPlayer audioPlayer;
+        /// <summary>
         /// Show the Filepath on the screen, etc 
         /// </summary>
         public TMP_Text ConsoleText;
@@ -265,6 +270,10 @@ namespace Recorder
                 // Create the audio file after removing the silence
                 AudioClip audioClip = AudioClip.Create(fileName, samplesData.Length, audioSource.clip.channels, 44100, false);
                 audioClip.SetData(samplesData, 0);
+
+                // Assign Current Audio Clip to Audio Player
+                audioPlayer.audioClip = audioClip;
+                audioPlayer.UpdateClip();
 
                 string filePath = Path.Combine(Application.persistentDataPath, fileName + " " + DateTime.UtcNow.ToString("yyyy_MM_dd HH_mm_ss_ffff") + ".wav");
 

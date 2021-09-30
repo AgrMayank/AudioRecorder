@@ -1,6 +1,18 @@
 # AudioRecorder
 Record & Save Audio Files with Unity
 
+![GitHub issues](https://img.shields.io/github/issues/AgrMayank/AudioRecorder?label=Issues&style=flat-square)
+![GitHub pull requests](https://img.shields.io/github/issues-pr/AgrMayank/AudioRecorder?label=Pull%20Requests&style=flat-square)
+![GitHub last commit](https://img.shields.io/github/last-commit/AgrMayank/AudioRecorder?label=Last%20Commit&style=flat-square)
+![GitHub commit activity](https://img.shields.io/github/commit-activity/m/AgrMayank/AudioRecorder?label=Commit%20Activity&style=flat-square)
+![GitHub All Releases](https://img.shields.io/github/downloads/AgrMayank/AudioRecorder/total?label=Downloads&style=flat-square)
+![GitHub repo size](https://img.shields.io/github/repo-size/AgrMayank/AudioRecorder?label=Repo%20Size&style=flat-square)
+
+## How to Use?
+- Download the latest version from [Releases page](https://github.com/AgrMayank/AudioRecorder/releases).
+<br>OR
+- Download and unzip the Source Code and build it for your desired platform.
+
 ## Preview
 ![Audio Recorder](https://user-images.githubusercontent.com/26793209/134897859-066e452d-6fb6-498c-b2f4-3aabd40b1ccc.gif)
 

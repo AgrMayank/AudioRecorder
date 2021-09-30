@@ -20,10 +20,11 @@ Record & Save Audio Files with Unity
 - [x] Click _Record_ Button to Start/Stop Recording.
 - [x] Press and Hold _Record_ Button to Record. Unpress to Save File.
 - [x] Record using _KeyPress_ Shortcuts.
-- [x] Day & Night Modes.
 - [x] Record Time Indicators.
+- [x] Dynamic Audio Record Time (Trim the Silence in the End).
 - [x] Recorded File Location Indicator.
-- [x] Dynamic Audio Record Time.
+- [x] Audio Player to Play/Pause the Last Recorded File.
+- [x] Day & Night Mode Toggles.
 - [x] Support for Android, iOS, MacOS, Windows and more.
 
 ## Options

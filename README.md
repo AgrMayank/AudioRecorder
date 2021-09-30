@@ -14,7 +14,7 @@ Record & Save Audio Files with Unity
 - Download and unzip the Source Code and build it for your desired platform.
 
 ## Preview
-![Audio Recorder](https://user-images.githubusercontent.com/26793209/134897859-066e452d-6fb6-498c-b2f4-3aabd40b1ccc.gif)
+https://user-images.githubusercontent.com/26793209/135424540-182ee28c-0f1a-4c83-893b-3898262aab27.mp4
 
 ## Features
 - [x] Click _Record_ Button to Start/Stop Recording.
@@ -33,4 +33,3 @@ Record & Save Audio Files with Unity
 - Enable or Disable _Hold to Record_ feature. [__NOTE:__ _Key Code & Click to record will be disabled when using this feature._]
 
 ![image](https://user-images.githubusercontent.com/26793209/135421299-1be46c08-f7d0-4cb6-b3c3-729b11f3ea58.png)
-

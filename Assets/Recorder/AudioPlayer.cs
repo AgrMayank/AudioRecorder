@@ -13,44 +13,65 @@ public class AudioPlayer : MonoBehaviour
 
     public TMP_Text ConsoleText;
 
-    private bool isPlaying = false;
+    public Image PlayImage, PauseImage;
 
-    public void PlayAudio()
+    private bool isPaused = false;
+
+    private void Start()
     {
-        if (!isPlaying)
+        isPaused = false;
+
+        IsPlaying(false);
+    }
+
+    private void IsPlaying(bool isPlaying)
+    {
+        PlayImage.gameObject.SetActive(!isPlaying);
+        PauseImage.gameObject.SetActive(isPlaying);
+    }
+
+    public void UpdateClip()
+    {
+        audioSource.clip = audioClip;
+
+        audioSlider.direction = Slider.Direction.LeftToRight;
+        audioSlider.minValue = 0;
+        audioSlider.maxValue = audioSource.clip.length;
+    }
+
+    public void PlayPauseAudio()
+    {
+        if (audioSource.isPlaying)
         {
-            audioSource.clip = audioClip;
-
-            audioSlider.direction = Slider.Direction.LeftToRight;
-            audioSlider.minValue = 0;
-            audioSlider.maxValue = audioSource.clip.length;
-
-            audioSource.Play();
-            isPlaying = true;
+            audioSource.Pause();
+            IsPlaying(false);
+            isPaused = true;
+        }
+        else if (isPaused)
+        {
+            IsPlaying(true);
+            audioSource.UnPause();
         }
         else
         {
-            audioSource.UnPause();
+            IsPlaying(true);
+            audioSource.Play();
         }
-    }
-
-    public void PauseAudio()
-    {
-        audioSource.Pause();
     }
 
     void Update()
     {
         if (audioClip == null)
         {
-            ConsoleText.text = "No Audio Clip Found. Record An Audio Clip First.";
+            ConsoleText.text = "No Audio Clip Found!\nRecord Something First.";
         }
 
         audioSlider.value = GetComponent<AudioSource>().time;
 
         if ((audioSlider.value == audioSlider.maxValue || audioSlider.value == audioSlider.minValue) && !audioSource.isPlaying)
         {
-            isPlaying = false;
+            IsPlaying(false);
+            isPaused = false;
         }
     }
 }

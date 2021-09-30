@@ -273,6 +273,7 @@ namespace Recorder
 
                 // Assign Current Audio Clip to Audio Player
                 audioPlayer.audioClip = audioClip;
+                audioPlayer.UpdateClip();
 
                 string filePath = Path.Combine(Application.persistentDataPath, fileName + " " + DateTime.UtcNow.ToString("yyyy_MM_dd HH_mm_ss_ffff") + ".wav");
 

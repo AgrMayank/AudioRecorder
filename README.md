@@ -31,4 +31,5 @@ Record & Save Audio Files with Unity
 - Set the Max _Time to Record_ Audio.
 - Enable or Disable _Hold to Record_ feature. [__NOTE:__ _Key Code & Click to record will be disabled when using this feature._]
 
-![Screenshot 2021-09-29 130621](https://user-images.githubusercontent.com/26793209/135225334-8cda010a-a37e-4438-b3a5-3d7bd423fb7b.png)
+![image](https://user-images.githubusercontent.com/26793209/135421299-1be46c08-f7d0-4cb6-b3c3-729b11f3ea58.png)
+

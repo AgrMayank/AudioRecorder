@@ -7,8 +7,7 @@ namespace Recorder
 {
     public static class FileWriter
     {
-        // static void WriteWAVFile(AudioClip clip, string filePath)
-        public static void WriteWAVFile(AudioClip clip, string filePath, int headerSize)
+        public static void WriteWavFile(AudioClip clip, string filePath, int headerSize)
         {
             float[] clipData = new float[clip.samples];
 

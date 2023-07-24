@@ -1,13 +1,10 @@
 ﻿using System;
 using System.IO;
-using System.Text;
 using System.Linq;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using UnityEngine.Events;
 using UnityEngine.EventSystems;
 
 #if UNITY_IOS
@@ -19,7 +16,6 @@ namespace Recorder
     /// <summary>
     /// Add this component to a GameObject to Record Mic Input 
     /// </summary>
-    // [RequireComponent(typeof(AudioSource), typeof(EventTrigger))]
     [RequireComponent(typeof(AudioSource))]
     public class Recorder : MonoBehaviour, IPointerClickHandler, IPointerDownHandler, IPointerUpHandler
     {
@@ -113,14 +109,8 @@ namespace Recorder
 
         private static void AuthorizeMicrophone()
         {
-            // Request iOS Microphone permission
-            // Application.RequestUserAuthorization(UserAuthorization.Microphone);
-
             // Check iOS Microphone permission
-            if (Application.HasUserAuthorization(UserAuthorization.Microphone))
-            {
-                Debug.Log("Microphone found");
-            }
+            if (Application.HasUserAuthorization(UserAuthorization.Microphone)) Debug.Log("Microphone found");
             else
             {
                 Debug.Log("Microphone not found");
@@ -132,9 +122,7 @@ namespace Recorder
         private void Update()
         {
             CheckRecordKey();
-
             CheckRecordingTime();
-
             SetTexts();
         }
 
@@ -187,13 +175,10 @@ namespace Recorder
 
         private void CheckRecordKey()
         {
-            // if (Input.GetKeyDown(keyCode) && !holdToRecord)
             if (holdToRecord) return;
             if (!Input.GetKeyDown(keyCode)) return;
-            // {
-                if (isRecording) SaveRecording();
-                else StartRecording();
-            // }
+            if (isRecording) SaveRecording();
+            else StartRecording();
         }
 
         #endregion
@@ -202,19 +187,11 @@ namespace Recorder
 
         public virtual void OnPointerClick(PointerEventData eventData)
         {
-            // if (!holdToRecord)
             if (holdToRecord) return;
             if (isRecording) SaveRecording();
             else StartRecording();
         }
 
-        // void IPointerDownHandler.OnPointerDown(PointerEventData eventData)
-        // void IPointerDownHandler.OnPointerDown(PointerEventData eventData)
-        // {
-        //     if (holdToRecord)
-        //         StartRecording();
-        // }
-        
         public void OnPointerDown(PointerEventData eventData)
         {
             if (holdToRecord) StartRecording();
@@ -294,7 +271,7 @@ namespace Recorder
                 try
                 {
                     // WriteWAVFile(audioClip, filePath);
-                    FileWriter.WriteWAVFile(audioClip, filePath, HEADER_SIZE);
+                    FileWriter.WriteWavFile(audioClip, filePath, HEADER_SIZE);
                     ConsoleText.text = "Audio Saved at: " + filePath;
                     Debug.Log("File Saved Successfully at " + filePath);
                 }
@@ -308,107 +285,6 @@ namespace Recorder
             }
         }
 
-        // public static byte[] ConvertWAVtoByteArray(string filePath)
-        // {
-        //     //Open the stream and read it back.
-        //     byte[] bytes = new byte[audioSource.clip.samples + HEADER_SIZE];
-        //     using (FileStream fs = File.OpenRead(filePath))
-        //     {
-        //         fs.Read(bytes, 0, bytes.Length);
-        //     }
-        //     return bytes;
-        // }
-
-        // // WAV file format from http://soundfile.sapp.org/doc/WaveFormat/
-        // static void WriteWAVFile(AudioClip clip, string filePath)
-        // {
-        //     float[] clipData = new float[clip.samples];
-        //
-        //     //Create the file.
-        //     using (Stream fs = File.Create(filePath))
-        //     {
-        //         int frequency = clip.frequency;
-        //         int numOfChannels = clip.channels;
-        //         int samples = clip.samples;
-        //         fs.Seek(0, SeekOrigin.Begin);
-        //
-        //         //Header
-        //
-        //         // Chunk ID
-        //         byte[] riff = Encoding.ASCII.GetBytes("RIFF");
-        //         fs.Write(riff, 0, 4);
-        //
-        //         // ChunkSize
-        //         byte[] chunkSize = BitConverter.GetBytes((HEADER_SIZE + clipData.Length) - 8);
-        //         fs.Write(chunkSize, 0, 4);
-        //
-        //         // Format
-        //         byte[] wave = Encoding.ASCII.GetBytes("WAVE");
-        //         fs.Write(wave, 0, 4);
-        //
-        //         // Subchunk1ID
-        //         byte[] fmt = Encoding.ASCII.GetBytes("fmt ");
-        //         fs.Write(fmt, 0, 4);
-        //
-        //         // Subchunk1Size
-        //         byte[] subChunk1 = BitConverter.GetBytes(16);
-        //         fs.Write(subChunk1, 0, 4);
-        //
-        //         // AudioFormat
-        //         byte[] audioFormat = BitConverter.GetBytes(1);
-        //         fs.Write(audioFormat, 0, 2);
-        //
-        //         // NumChannels
-        //         byte[] numChannels = BitConverter.GetBytes(numOfChannels);
-        //         fs.Write(numChannels, 0, 2);
-        //
-        //         // SampleRate
-        //         byte[] sampleRate = BitConverter.GetBytes(frequency);
-        //         fs.Write(sampleRate, 0, 4);
-        //
-        //         // ByteRate
-        //         byte[] byteRate = BitConverter.GetBytes(frequency * numOfChannels * 2); // sampleRate * bytesPerSample*number of channels, here 44100*2*2
-        //         fs.Write(byteRate, 0, 4);
-        //
-        //         // BlockAlign
-        //         ushort blockAlign = (ushort)(numOfChannels * 2);
-        //         fs.Write(BitConverter.GetBytes(blockAlign), 0, 2);
-        //
-        //         // BitsPerSample
-        //         ushort bps = 16;
-        //         byte[] bitsPerSample = BitConverter.GetBytes(bps);
-        //         fs.Write(bitsPerSample, 0, 2);
-        //
-        //         // Subchunk2ID
-        //         byte[] datastring = Encoding.ASCII.GetBytes("data");
-        //         fs.Write(datastring, 0, 4);
-        //
-        //         // Subchunk2Size
-        //         byte[] subChunk2 = BitConverter.GetBytes(samples * numOfChannels * 2);
-        //         fs.Write(subChunk2, 0, 4);
-        //
-        //         // Data
-        //
-        //         clip.GetData(clipData, 0);
-        //         short[] intData = new short[clipData.Length];
-        //         byte[] bytesData = new byte[clipData.Length * 2];
-        //
-        //         int convertionFactor = 32767;
-        //
-        //         for (int i = 0; i < clipData.Length; i++)
-        //         {
-        //             intData[i] = (short)(clipData[i] * convertionFactor);
-        //             byte[] byteArr = new byte[2];
-        //             byteArr = BitConverter.GetBytes(intData[i]);
-        //             byteArr.CopyTo(bytesData, i * 2);
-        //         }
-        //
-        //         fs.Write(bytesData, 0, bytesData.Length);
-        //     }
-        // }
-
         #endregion
-
-        
     }
 }

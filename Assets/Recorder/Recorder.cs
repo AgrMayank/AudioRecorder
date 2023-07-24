@@ -22,34 +22,40 @@ namespace Recorder
         #region Constants &  Static Variables
 
         /// <summary>
+        /// Is Recording
+        /// </summary>
+        // public static bool isRecording = false;
+        public bool isRecording = false;
+        
+        /// <summary>
         /// Audio Source to store Microphone Input, An AudioSource Component is required by default
         /// </summary>
-        static AudioSource audioSource;
+        private static AudioSource audioSource;
+        
         /// <summary>
         /// The samples are floats ranging from -1.0f to 1.0f, representing the data in the audio clip
         /// </summary>
-        static float[] samplesData;
+        private static float[] samplesData;
+        
         /// <summary>
         /// WAV file header size
         /// </summary>
-        const int HEADER_SIZE = 44;
+        private const int HEADER_SIZE = 44;
 
         #endregion
 
         #region Private Variables
-
-        /// <summary>
-        /// Is Recording
-        /// </summary>
-        public static bool isRecording = false;
         /// <summary>
         /// Recording Time
         /// </summary>
-        private float recordingTime = 0f;
+        // private float recordingTime = 0f;
+        public float recordingTime = 0f;
+        
         /// <summary>
         /// Recording Time Minute and Seconds
         /// </summary>
-        private int minute = 0, second = 0;
+        // private int minute = 0, second = 0;
+        public int minute = 0, second = 0;
 
         #endregion
 
@@ -60,32 +66,39 @@ namespace Recorder
         /// </summary>
         [Tooltip("Set a keyboard key for saving the Audio File")]
         public KeyCode keyCode;
+        
         /// <summary>
         /// Audio Player Script for Playing Audio Files
         /// </summary>
         [Tooltip("Audio Player Script for Playing Audio Files")]
         public AudioPlayer audioPlayer;
-        /// <summary>
-        /// Show the Filepath on the screen, etc 
-        /// </summary>
-        public TMP_Text ConsoleText;
-        /// <summary>
-        /// Show the Recording Time on the screen
-        /// </summary>
-        public TMP_Text RecordingTimeText;
+        
+        // /// <summary>
+        // /// Show the Filepath on the screen, etc 
+        // /// </summary>
+        // public TMP_Text ConsoleText;
+        
+        // /// <summary>
+        // /// Show the Recording Time on the screen
+        // /// </summary>
+        // public TMP_Text RecordingTimeText;
+        
         /// <summary>
         /// Set a Button to trigger recording or saving the Audio WAV file 
         /// </summary>
         public Button RecordButton;
-        /// <summary>
-        /// Record or Save Image for the Record Button
-        /// </summary>
-        public Image RecordImage, SaveImage;
+        
+        // /// <summary>
+        // /// Record or Save Image for the Record Button
+        // /// </summary>
+        // public Image RecordImage, SaveImage;
+        
         /// <summary>
         /// Set max duration of the audio file in seconds
         /// </summary>
         [Tooltip("Set max duration of the audio file in seconds")]
         public int timeToRecord = 30;
+        
         /// <summary>
         /// Hold Button to Record
         /// </summary>
@@ -94,17 +107,27 @@ namespace Recorder
 
         #endregion
 
+
+
+
+        [SerializeField] private View _recorderView;
+        
+        
+        
+
         #region MonoBehaviour Callbacks
 
-        void Start()
+        private void Start()
         {
+            
+            _recorderView.Init(this);
+            
             AuthorizeMicrophone();
 
             // Get the AudioSource component
             audioSource = GetComponent<AudioSource>();
-
             isRecording = false;
-            ConsoleText.text = "";
+            // ConsoleText.text = "";
         }
 
         private static void AuthorizeMicrophone()
@@ -121,63 +144,71 @@ namespace Recorder
 
         private void Update()
         {
+            recordingTime += Time.deltaTime;
             CheckRecordKey();
             CheckRecordingTime();
-            SetTexts();
+            // SetTexts();
         }
 
-        private void SetTexts()
-        {
-            if (isRecording)
-            {
-                ConsoleText.text = "";
-                recordingTime += Time.deltaTime;
-
-                minute = (int)(recordingTime / 60);
-                second = (int)(recordingTime % 60);
-
-                if (minute < 10)
-                {
-                    if (second < 10)
-                    {
-                        RecordingTimeText.text = "0" + minute + ":0" + second;
-                    }
-                    else
-                    {
-                        RecordingTimeText.text = "0" + minute + ":" + second;
-                    }
-                }
-                else if (second < 10)
-                {
-                    RecordingTimeText.text = minute + ":0" + second;
-                }
-                else
-                {
-                    RecordingTimeText.text = minute + ":" + second;
-                }
-
-                RecordImage.gameObject.SetActive(false);
-                SaveImage.gameObject.SetActive(true);
-            }
-            else
-            {
-                RecordingTimeText.text = "00:00";
-
-                RecordImage.gameObject.SetActive(true);
-                SaveImage.gameObject.SetActive(false);
-            }
-        }
+        // private void SetTexts()
+        // {
+        //     if (isRecording)
+        //     {
+        //         ConsoleText.text = "";
+        //         recordingTime += Time.deltaTime;
+        //
+        //         minute = (int)(recordingTime / 60);
+        //         second = (int)(recordingTime % 60);
+        //
+        //         if (minute < 10)
+        //         {
+        //             if (second < 10)
+        //             {
+        //                 RecordingTimeText.text = "0" + minute + ":0" + second;
+        //             }
+        //             else
+        //             {
+        //                 RecordingTimeText.text = "0" + minute + ":" + second;
+        //             }
+        //         }
+        //         else if (second < 10)
+        //         {
+        //             RecordingTimeText.text = minute + ":0" + second;
+        //         }
+        //         else
+        //         {
+        //             RecordingTimeText.text = minute + ":" + second;
+        //         }
+        //
+        //         RecordImage.gameObject.SetActive(false);
+        //         SaveImage.gameObject.SetActive(true);
+        //     }
+        //     else
+        //     {
+        //         RecordingTimeText.text = "00:00";
+        //
+        //         RecordImage.gameObject.SetActive(true);
+        //         SaveImage.gameObject.SetActive(false);
+        //     }
+        // }
 
         private void CheckRecordingTime()
         {
-            if (recordingTime >= timeToRecord) SaveRecording();
+            if (recordingTime >= timeToRecord) StopRecording();
         }
 
         private void CheckRecordKey()
         {
             if (holdToRecord) return;
             if (!Input.GetKeyDown(keyCode)) return;
-            if (isRecording) SaveRecording();
+            
+            // if (!isRecording) StartRecording();
+            // else
+            // {
+            //     SaveRecording();
+            // }
+            
+            if (isRecording) StopRecording();
             else StartRecording();
         }
 
@@ -188,7 +219,7 @@ namespace Recorder
         public virtual void OnPointerClick(PointerEventData eventData)
         {
             if (holdToRecord) return;
-            if (isRecording) SaveRecording();
+            if (isRecording) StopRecording();
             else StartRecording();
         }
 
@@ -199,7 +230,7 @@ namespace Recorder
 
         void IPointerUpHandler.OnPointerUp(PointerEventData eventData)
         {
-            if (holdToRecord) SaveRecording();
+            if (holdToRecord) StopRecording();
         }
 
         IEnumerator ScaleOverTime(GameObject button, float scaleFactor)
@@ -231,9 +262,19 @@ namespace Recorder
 
             Microphone.End(Microphone.devices[0]);
             audioSource.clip = Microphone.Start(Microphone.devices[0], false, timeToRecord, 44100);
+
+
+
+            _recorderView.OnStartRecording();
         }
 
-        public void SaveRecording(string fileName = "Audio")
+        public void StopRecording(string fileName = "Audio")
+        {
+            _recorderView.OnStopRecording();
+            SaveRecording();
+        }
+
+        private void SaveRecording(string fileName = "Audio")
         {
             if (isRecording)
             {
@@ -272,7 +313,12 @@ namespace Recorder
                 {
                     // WriteWAVFile(audioClip, filePath);
                     FileWriter.WriteWavFile(audioClip, filePath, HEADER_SIZE);
-                    ConsoleText.text = "Audio Saved at: " + filePath;
+                    // ConsoleText.text = "Audio Saved at: " + filePath;
+                    
+                    _recorderView.OnRecordingSaved($"Audio saved at {filePath}");
+                    
+                    
+                    
                     Debug.Log("File Saved Successfully at " + filePath);
                 }
                 catch (DirectoryNotFoundException)

@@ -1,9 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using System.Collections;
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
 #if UNITY_IOS
@@ -74,11 +72,6 @@ namespace Recorder
         /// </summary>
         [Tooltip("Audio Player Script for Playing Audio Files")]
         public AudioPlayer audioPlayer;
-
-        // /// <summary>
-        // /// Set a Button to trigger recording or saving the Audio WAV file 
-        // /// </summary>
-        // public Button RecordButton;
 
         /// <summary>
         /// Set max duration of the audio file in seconds
@@ -166,21 +159,6 @@ namespace Recorder
             if (holdToRecord) StopRecording();
         }
 
-        // IEnumerator ScaleOverTime(GameObject button, float scaleFactor)
-        // {
-        //     Vector3 originalScale = button.transform.localScale;
-        //     Vector3 destinationScale = new Vector3(scaleFactor, scaleFactor, scaleFactor);
-        //     float currentTime = 0.0f;
-        //
-        //     do
-        //     {
-        //         button.transform.localScale = Vector3.Lerp(originalScale, destinationScale, currentTime / 0.5f);
-        //         currentTime += Time.deltaTime;
-        //         yield return null;
-        //     }
-        //     while (currentTime <= 1f);
-        // }
-
         #endregion
 
         #region Recorder Functions
@@ -189,7 +167,6 @@ namespace Recorder
         {
             recordingTime = 0f;
             isRecording = true;
-            // StartCoroutine(ScaleOverTime(RecordButton.gameObject, 1.2f));
             Microphone.End(Microphone.devices[0]);
             audioSource.clip = Microphone.Start(Microphone.devices[0], false, timeToRecord, 44100);
             _recorderView.OnStartRecording();
@@ -203,8 +180,6 @@ namespace Recorder
 
         private void SaveRecording(string fileName = "Audio")
         {
-                // StartCoroutine(ScaleOverTime(RecordButton.gameObject, 1f));
-
                 while (!(Microphone.GetPosition(null) > 0)) { }
                 samplesData = new float[audioSource.clip.samples * audioSource.clip.channels];
                 audioSource.clip.GetData(samplesData, 0);

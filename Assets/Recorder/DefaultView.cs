@@ -1,6 +1,7 @@
 using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace Recorder
@@ -26,6 +27,14 @@ namespace Recorder
         /// Save Image for the Record Button
         /// </summary>
         [SerializeField] protected Image _saveImage;
+        
+        /// <summary>
+        /// Set a Button to trigger recording or saving the Audio WAV file 
+        /// </summary>
+        [SerializeField] private Button _recordButton;
+        
+        
+        
 
         private Coroutine _timeUpdateRoutine;
 
@@ -42,13 +51,6 @@ namespace Recorder
         
         
         
-        
-        
-        
-        /// <summary>
-        /// Set a Button to trigger recording or saving the Audio WAV file 
-        /// </summary>
-        public Button RecordButton;
         
         
         
@@ -107,7 +109,7 @@ namespace Recorder
 
         public override void OnStartRecording()
         {
-            StartCoroutine(ScaleOverTime(RecordButton.gameObject, 1.2f));
+            StartCoroutine(ScaleOverTime(_recordButton.gameObject, 1.2f));
             _recordingTimeText.text = "00:00";
             _recordImage.gameObject.SetActive(true);
             _saveImage.gameObject.SetActive(false);
@@ -116,7 +118,7 @@ namespace Recorder
 
         public override void OnStopRecording()
         {
-            StartCoroutine(ScaleOverTime(RecordButton.gameObject, 1f));
+            StartCoroutine(ScaleOverTime(_recordButton.gameObject, 1f));
             _recordingTimeText.text = "00:00";
             _recordImage.gameObject.SetActive(true);
             _saveImage.gameObject.SetActive(false);

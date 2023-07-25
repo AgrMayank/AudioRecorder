@@ -1,7 +1,6 @@
 using System.Collections;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace Recorder
@@ -33,9 +32,9 @@ namespace Recorder
         /// </summary>
         [SerializeField] private Button _recordButton;
         
-        
-        
-
+        /// <summary>
+        /// 
+        /// </summary>
         private Coroutine _timeUpdateRoutine;
 
         /// <summary>
@@ -47,14 +46,6 @@ namespace Recorder
         /// Recording Time-Seconds
         /// </summary>
         private int _second = 0;
-        
-        
-        
-        
-        
-        
-        
-        
 
         public override void Init(AudioRecordHandler audioRecordHandler)
         {
@@ -62,11 +53,6 @@ namespace Recorder
             _consoleText.text = "";
         }
 
-        private void SetRecordingTimeTextValue(string minute, string second)
-        {
-            
-        }
-        
         IEnumerator ScaleOverTime(GameObject button, float scaleFactor)
         {
             Vector3 originalScale = button.transform.localScale;

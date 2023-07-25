@@ -33,7 +33,7 @@ namespace Recorder
         [SerializeField] private Button _recordButton;
         
         /// <summary>
-        /// 
+        /// The coroutine that updates time text.
         /// </summary>
         private Coroutine _timeUpdateRoutine;
 
@@ -52,11 +52,11 @@ namespace Recorder
             _consoleText.text = "";
         }
 
-        IEnumerator ScaleOverTime(GameObject button, float scaleFactor)
+        private IEnumerator ScaleOverTime(GameObject button, float scaleFactor)
         {
-            Vector3 originalScale = button.transform.localScale;
-            Vector3 destinationScale = new Vector3(scaleFactor, scaleFactor, scaleFactor);
-            float currentTime = 0.0f;
+            var originalScale = button.transform.localScale;
+            var destinationScale = new Vector3(scaleFactor, scaleFactor, scaleFactor);
+            var currentTime = 0.0f;
 
             do
             {
@@ -67,7 +67,7 @@ namespace Recorder
             while (currentTime <= 1f);
         }
         
-        IEnumerator UpdateRecordingTime()
+        private IEnumerator UpdateRecordingTime()
         {
             while (AudioRecorder.IsRecording)
             {

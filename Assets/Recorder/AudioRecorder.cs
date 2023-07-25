@@ -34,7 +34,6 @@ namespace Recorder
             audioSource.clip = Microphone.Start(Microphone.devices[0], false, timeToRecord, 44100);
         }
 
-        // public static string SaveRecording(AudioSource audioSource, string fileName = "Audio")
         public static FileWritingResultModel SaveRecording(AudioSource audioSource, string fileName = "Audio")
         {
             IsRecording = false;
@@ -73,31 +72,13 @@ namespace Recorder
             {
                 FileWriter.WriteWavFile(audioClip, filePath, HeaderSize);
 
-
                 wavWritingResult = new FileWritingResultModel()
                 {
                     status = true,
                     result = filePath,
                     error = null
                 };
-
-
-                // return wavWritingResult;
-                
-                
-                // return filePath;
             }
-            // catch (DirectoryNotFoundException)
-            // {
-            //     // wavWritingResult = new FileWritingResultModel()
-            //     // {
-            //     //     status = true,
-            //     //     result = filePath,
-            //     //     error = null
-            //     // };
-            //     return "Persistent Data Path not found!";
-            // }
-            // // catch
             catch(Exception exception)
             {
                 wavWritingResult = new FileWritingResultModel()
@@ -106,8 +87,6 @@ namespace Recorder
                     result = null,
                     error = exception.Message
                 };
-                
-                // return "Something went wrong while saving audio file!";
             }
 
             return wavWritingResult;

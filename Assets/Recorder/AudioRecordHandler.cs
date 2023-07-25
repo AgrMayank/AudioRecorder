@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.Serialization;
 
 #if UNITY_IOS
 using UnityEngine.iOS;
@@ -14,14 +15,7 @@ namespace Recorder
     [RequireComponent(typeof(AudioSource))]
     public class AudioRecordHandler : MonoBehaviour, IPointerClickHandler, IPointerDownHandler, IPointerUpHandler
     {
-        /// <summary>
-        /// Recording Time
-        /// </summary>
-        public float recordingTime { get; private set; }
-
-
-        #region Constants &  Static Variables
-
+        #region Static Variables
         /// <summary>
         /// Audio Source to store Microphone Input, An AudioSource Component is required by default
         /// </summary>
@@ -31,11 +25,10 @@ namespace Recorder
         /// The samples are floats ranging from -1.0f to 1.0f, representing the data in the audio clip
         /// </summary>
         private static float[] samplesData;
-
         #endregion
 
+        
         #region Editor Exposed Variables
-
         /// <summary>
         /// Set a keyboard key for saving the Audio File
         /// </summary>
@@ -54,58 +47,32 @@ namespace Recorder
         [Tooltip("Press and Hold Record button to Record")]
         public bool holdToRecord = false;
 
-        [SerializeField] private View _recorderView;
-
+        /// <summary>
+        /// The component that Handles recorder UI
+        /// </summary>
+        [Tooltip("AudioRecorderView component for recorder")]
+        [SerializeField] private View recorderView;
         #endregion
 
 
         #region MonoBehaviour Callbacks
-
         private void Start()
         {
             AuthorizeMicrophone();
             audioSource = GetComponent<AudioSource>();
         }
-
-        private static void AuthorizeMicrophone()
-        {
-            // Check iOS Microphone permission
-            if (Application.HasUserAuthorization(UserAuthorization.Microphone)) Debug.Log("Microphone found");
-            else
-            {
-                Debug.Log("Microphone not found");
-                // Request iOS Microphone permission
-                Application.RequestUserAuthorization(UserAuthorization.Microphone);
-            }
-        }
-
+        
         private void Update()
         {
             CheckRecordKey();
             if (!AudioRecorder.IsRecording) return;
             AudioRecorder.UpdateRecordingTime();
-            recordingTime += Time.deltaTime;
             CheckRecordingTime();
-
         }
+        #endregion MonoBehaviour Callbacks
 
-        private void CheckRecordingTime()
-        {
-            if (recordingTime >= timeToRecord) StartCoroutine(StopRecording());
-        }
-
-        private void CheckRecordKey()
-        {
-            if (holdToRecord) return;
-            if (!Input.GetKeyDown(keyCode)) return;
-            if (AudioRecorder.IsRecording) StartCoroutine(StopRecording());
-            else StartRecording();
-        }
-
-        #endregion
-
-        #region Other Functions
-
+        
+        #region Event Functions
         public void OnPointerClick(PointerEventData eventData)
         {
             if (holdToRecord) return;
@@ -122,37 +89,54 @@ namespace Recorder
         {
             if (holdToRecord) StartCoroutine(StopRecording());
         }
+        #endregion Event Functions
 
-        #endregion
-
+        
         #region Recorder Functions
-
-        public void StartRecording()
+        private static void AuthorizeMicrophone()
         {
-            AudioRecorder.StartRecording(audioSource, timeToRecord);
-            _recorderView.OnStartRecording();
+            // Check iOS Microphone permission
+            if (Application.HasUserAuthorization(UserAuthorization.Microphone)) Debug.Log("Microphone found");
+            else
+            {
+                Debug.Log("Microphone not found");
+                // Request iOS Microphone permission
+                Application.RequestUserAuthorization(UserAuthorization.Microphone);
+            }
+        }
+        
+        private void CheckRecordingTime()
+        {
+            if (AudioRecorder.RecordingTime >= timeToRecord) StartCoroutine(StopRecording());
         }
 
-        public IEnumerator StopRecording(string fileName = "Audio")
+        private void CheckRecordKey()
         {
-            _recorderView.OnStopRecording();
-            // var filePath = "";
+            if (holdToRecord) return;
+            if (!Input.GetKeyDown(keyCode)) return;
+            if (AudioRecorder.IsRecording) StartCoroutine(StopRecording());
+            else StartRecording();
+        }
+        
+        private void StartRecording()
+        {
+            AudioRecorder.StartRecording(audioSource, timeToRecord);
+            recorderView.OnStartRecording();
+        }
 
-            // var writingResult = new FileWritingResultModel();
+        private IEnumerator StopRecording(string fileName = "Audio")
+        {
+            recorderView.OnStopRecording();
             FileWritingResultModel writingResult = null; 
 
             yield return new WaitUntil(() =>
             {
-                // filePath = AudioRecorder.SaveRecording(audioSource, fileName);
                 writingResult = AudioRecorder.SaveRecording(audioSource, fileName);
-                // return !string.IsNullOrEmpty(filePath);
                 return writingResult != null;
             });
             
-            // _recorderView.OnRecordingSaved($"Audio saved at {filePath}");
-            _recorderView.OnRecordingSaved($"Audio saved at {writingResult.result}");
+            recorderView.OnRecordingSaved($"Audio saved at {writingResult.result}");
         }
-
-        #endregion
+        #endregion Recorder Functions
     }
 }

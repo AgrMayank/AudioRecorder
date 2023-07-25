@@ -789,6 +789,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isRecording: 0
   recordingTime: 0
+  minute: 0
+  second: 0
   keyCode: 9
   audioPlayer: {fileID: 359868437}
   RecordButton: {fileID: 558215100}
@@ -995,7 +997,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 558215097}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5652deb9acc02c54284e834081a30b94, type: 3}
+  m_Script: {fileID: 11500000, guid: 867d846bafcc6a74886ef32165d26043, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _consoleText: {fileID: 1311448495}

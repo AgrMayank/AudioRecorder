@@ -50,11 +50,11 @@ namespace Recorder
         // private float recordingTime = 0f;
         public float recordingTime = 0f;
         
-        /// <summary>
-        /// Recording Time Minute and Seconds
-        /// </summary>
-        // private int minute = 0, second = 0;
-        public int minute = 0, second = 0;
+        // /// <summary>
+        // /// Recording Time Minute and Seconds
+        // /// </summary>
+        // // private int minute = 0, second = 0;
+        // public int minute = 0, second = 0;
 
         #endregion
 
@@ -121,9 +121,23 @@ namespace Recorder
 
         private void Update()
         {
-            recordingTime += Time.deltaTime;
+            // recordingTime += Time.deltaTime;
+            
+            
+
+            if (isRecording) recordingTime += Time.deltaTime;
+
+            
+            
+            
             CheckRecordKey();
             CheckRecordingTime();
+
+
+            // if (isRecording) recordingTime += Time.deltaTime;
+            
+            
+            
         }
 
         private void CheckRecordingTime()

@@ -18,13 +18,31 @@ namespace Recorder
     [RequireComponent(typeof(AudioSource))]
     public class Recorder : MonoBehaviour, IPointerClickHandler, IPointerDownHandler, IPointerUpHandler
     {
-        #region Constants &  Static Variables
-
         /// <summary>
-        /// Is Recording
+        /// A flag that represents if the recorder is recording a voice or not.
         /// </summary>
-        // public static bool isRecording = false;
-        public bool isRecording = false;
+        public bool isRecording { get; private set; }
+        
+        
+        
+        /// <summary>
+        /// Recording Time
+        /// </summary>
+        public float recordingTime { get; private set; }
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        #region Constants &  Static Variables
         
         /// <summary>
         /// Audio Source to store Microphone Input, An AudioSource Component is required by default
@@ -40,21 +58,6 @@ namespace Recorder
         /// WAV file header size
         /// </summary>
         private const int HEADER_SIZE = 44;
-
-        #endregion
-
-        #region Private Variables
-        /// <summary>
-        /// Recording Time
-        /// </summary>
-        // private float recordingTime = 0f;
-        public float recordingTime = 0f;
-        
-        // /// <summary>
-        // /// Recording Time Minute and Seconds
-        // /// </summary>
-        // // private int minute = 0, second = 0;
-        // public int minute = 0, second = 0;
 
         #endregion
 
@@ -121,23 +124,12 @@ namespace Recorder
 
         private void Update()
         {
-            // recordingTime += Time.deltaTime;
-            
-            
-
-            if (isRecording) recordingTime += Time.deltaTime;
-
-            
-            
-            
-            CheckRecordKey();
-            CheckRecordingTime();
-
-
-            // if (isRecording) recordingTime += Time.deltaTime;
-            
-            
-            
+            if (isRecording)
+            {
+                recordingTime += Time.deltaTime;
+                CheckRecordingTime();
+            }
+            else CheckRecordKey();
         }
 
         private void CheckRecordingTime()
@@ -211,8 +203,6 @@ namespace Recorder
 
         private void SaveRecording(string fileName = "Audio")
         {
-            if (isRecording)
-            {
                 StartCoroutine(ScaleOverTime(RecordButton.gameObject, 1f));
 
                 while (!(Microphone.GetPosition(null) > 0)) { }
@@ -257,7 +247,6 @@ namespace Recorder
 
                 isRecording = false;
                 Microphone.End(Microphone.devices[0]);
-            }
         }
 
         #endregion

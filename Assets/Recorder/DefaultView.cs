@@ -38,6 +38,21 @@ namespace Recorder
         /// Recording Time-Seconds
         /// </summary>
         private int _second = 0;
+        
+        
+        
+        
+        
+        
+        
+        /// <summary>
+        /// Set a Button to trigger recording or saving the Audio WAV file 
+        /// </summary>
+        public Button RecordButton;
+        
+        
+        
+        
 
         public override void Init(Recorder recorder)
         {
@@ -48,6 +63,21 @@ namespace Recorder
         private void SetRecordingTimeTextValue(string minute, string second)
         {
             
+        }
+        
+        IEnumerator ScaleOverTime(GameObject button, float scaleFactor)
+        {
+            Vector3 originalScale = button.transform.localScale;
+            Vector3 destinationScale = new Vector3(scaleFactor, scaleFactor, scaleFactor);
+            float currentTime = 0.0f;
+
+            do
+            {
+                button.transform.localScale = Vector3.Lerp(originalScale, destinationScale, currentTime / 0.5f);
+                currentTime += Time.deltaTime;
+                yield return null;
+            }
+            while (currentTime <= 1f);
         }
         
         IEnumerator UpdateRecordingTime()
@@ -77,6 +107,7 @@ namespace Recorder
 
         public override void OnStartRecording()
         {
+            StartCoroutine(ScaleOverTime(RecordButton.gameObject, 1.2f));
             _recordingTimeText.text = "00:00";
             _recordImage.gameObject.SetActive(true);
             _saveImage.gameObject.SetActive(false);
@@ -85,6 +116,7 @@ namespace Recorder
 
         public override void OnStopRecording()
         {
+            StartCoroutine(ScaleOverTime(RecordButton.gameObject, 1f));
             _recordingTimeText.text = "00:00";
             _recordImage.gameObject.SetActive(true);
             _saveImage.gameObject.SetActive(false);

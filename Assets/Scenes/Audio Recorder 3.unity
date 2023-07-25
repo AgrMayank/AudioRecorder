@@ -787,8 +787,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: faea64dd2085d47e9ae11feef7237a3b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isRecording: 0
+  recordingTime: 0
   keyCode: 9
   audioPlayer: {fileID: 359868437}
+  RecordButton: {fileID: 558215100}
   timeToRecord: 600
   holdToRecord: 1
   _recorderView: {fileID: 558215105}
@@ -999,7 +1002,6 @@ MonoBehaviour:
   _recordingTimeText: {fileID: 1331932854}
   _recordImage: {fileID: 1147838525}
   _saveImage: {fileID: 236742136}
-  RecordButton: {fileID: 558215100}
 --- !u!1 &646893197
 GameObject:
   m_ObjectHideFlags: 0

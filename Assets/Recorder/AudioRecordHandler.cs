@@ -32,11 +32,6 @@ namespace Recorder
         /// </summary>
         private static float[] samplesData;
 
-        /// <summary>
-        /// WAV file header size
-        /// </summary>
-        private const int HEADER_SIZE = 44;
-
         #endregion
 
         #region Editor Exposed Variables
@@ -46,12 +41,6 @@ namespace Recorder
         /// </summary>
         [Tooltip("Set a keyboard key for saving the Audio File")]
         public KeyCode keyCode;
-
-        /// <summary>
-        /// Audio Player Script for Playing Audio Files
-        /// </summary>
-        [Tooltip("Audio Player Script for Playing Audio Files")]
-        public AudioPlayer audioPlayer;
 
         /// <summary>
         /// Set max duration of the audio file in seconds
@@ -117,7 +106,7 @@ namespace Recorder
 
         #region Other Functions
 
-        public virtual void OnPointerClick(PointerEventData eventData)
+        public void OnPointerClick(PointerEventData eventData)
         {
             if (holdToRecord) return;
             if (AudioRecorder.IsRecording) StartCoroutine(StopRecording());
@@ -147,15 +136,21 @@ namespace Recorder
         public IEnumerator StopRecording(string fileName = "Audio")
         {
             _recorderView.OnStopRecording();
-            var filePath = "";
+            // var filePath = "";
+
+            // var writingResult = new FileWritingResultModel();
+            FileWritingResultModel writingResult = null; 
 
             yield return new WaitUntil(() =>
             {
-                filePath = AudioRecorder.SaveRecording(audioSource, fileName);
-                return !string.IsNullOrEmpty(filePath);
+                // filePath = AudioRecorder.SaveRecording(audioSource, fileName);
+                writingResult = AudioRecorder.SaveRecording(audioSource, fileName);
+                // return !string.IsNullOrEmpty(filePath);
+                return writingResult != null;
             });
             
-            _recorderView.OnRecordingSaved($"Audio saved at {filePath}");
+            // _recorderView.OnRecordingSaved($"Audio saved at {filePath}");
+            _recorderView.OnRecordingSaved($"Audio saved at {writingResult.result}");
         }
 
         #endregion

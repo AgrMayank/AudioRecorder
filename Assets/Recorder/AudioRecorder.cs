@@ -34,7 +34,8 @@ namespace Recorder
             audioSource.clip = Microphone.Start(Microphone.devices[0], false, timeToRecord, 44100);
         }
 
-        public static string SaveRecording(AudioSource audioSource, string fileName = "Audio")
+        // public static string SaveRecording(AudioSource audioSource, string fileName = "Audio")
+        public static FileWritingResultModel SaveRecording(AudioSource audioSource, string fileName = "Audio")
         {
             IsRecording = false;
             Microphone.End(Microphone.devices[0]);
@@ -66,19 +67,50 @@ namespace Recorder
                 File.Delete(filePath);
             }
 
+            FileWritingResultModel wavWritingResult;
+            
             try
             {
                 FileWriter.WriteWavFile(audioClip, filePath, HeaderSize);
-                return filePath;
+
+
+                wavWritingResult = new FileWritingResultModel()
+                {
+                    status = true,
+                    result = filePath,
+                    error = null
+                };
+
+
+                // return wavWritingResult;
+                
+                
+                // return filePath;
             }
-            catch (DirectoryNotFoundException)
+            // catch (DirectoryNotFoundException)
+            // {
+            //     // wavWritingResult = new FileWritingResultModel()
+            //     // {
+            //     //     status = true,
+            //     //     result = filePath,
+            //     //     error = null
+            //     // };
+            //     return "Persistent Data Path not found!";
+            // }
+            // // catch
+            catch(Exception exception)
             {
-                return "Persistent Data Path not found!";
+                wavWritingResult = new FileWritingResultModel()
+                {
+                    status = false,
+                    result = null,
+                    error = exception.Message
+                };
+                
+                // return "Something went wrong while saving audio file!";
             }
-            catch
-            {
-                return "Something went wrong while saving audio file!";
-            }
+
+            return wavWritingResult;
         }
     }
 }

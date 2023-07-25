@@ -62,10 +62,10 @@ namespace Recorder
 
         void Update()
         {
-            if (audioClip == null)
-            {
-                ConsoleText.text = "No Audio Clip Found!\nRecord Something First.";
-            }
+            // if (audioClip == null)
+            // {
+            //     ConsoleText.text = "No Audio Clip Found!\nRecord Something First.";
+            // }
 
             audioSlider.value = GetComponent<AudioSource>().time;
 

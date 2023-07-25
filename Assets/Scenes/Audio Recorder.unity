@@ -788,7 +788,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   keyCode: 9
-  audioPlayer: {fileID: 359868437}
   timeToRecord: 600
   holdToRecord: 1
   _recorderView: {fileID: 558215105}

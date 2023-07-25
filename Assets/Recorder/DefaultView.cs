@@ -56,9 +56,9 @@ namespace Recorder
         
         
 
-        public override void Init(Recorder recorder)
+        public override void Init(AudioRecordHandler audioRecordHandler)
         {
-            base.Init(recorder);
+            base.Init(audioRecordHandler);
             _consoleText.text = "";
         }
 
@@ -84,7 +84,7 @@ namespace Recorder
         
         IEnumerator UpdateRecordingTime()
         {
-            while (_recorder.isRecording)
+            while (audioRecordHandler.isRecording)
             {
                 _consoleText.text = "";
                 CalculateMinuteAndSecond();
@@ -103,8 +103,8 @@ namespace Recorder
 
         private void CalculateMinuteAndSecond()
         {
-            _minute = (int)(_recorder.recordingTime / 60);
-            _second = (int)(_recorder.recordingTime % 60);
+            _minute = (int)(audioRecordHandler.recordingTime / 60);
+            _second = (int)(audioRecordHandler.recordingTime % 60);
         }
 
         public override void OnStartRecording()

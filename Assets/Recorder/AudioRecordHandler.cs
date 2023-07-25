@@ -14,44 +14,32 @@ namespace Recorder
     /// Add this component to a GameObject to Record Mic Input 
     /// </summary>
     [RequireComponent(typeof(AudioSource))]
-    public class Recorder : MonoBehaviour, IPointerClickHandler, IPointerDownHandler, IPointerUpHandler
+    public class AudioRecordHandler : MonoBehaviour, IPointerClickHandler, IPointerDownHandler, IPointerUpHandler
     {
         /// <summary>
         /// A flag that represents if the recorder is recording a voice or not.
         /// </summary>
         public bool isRecording { get; private set; }
-        
-        
-        
+
+
         /// <summary>
         /// Recording Time
         /// </summary>
         public float recordingTime { get; private set; }
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
+
+
         #region Constants &  Static Variables
-        
+
         /// <summary>
         /// Audio Source to store Microphone Input, An AudioSource Component is required by default
         /// </summary>
         private static AudioSource audioSource;
-        
+
         /// <summary>
         /// The samples are floats ranging from -1.0f to 1.0f, representing the data in the audio clip
         /// </summary>
         private static float[] samplesData;
-        
+
         /// <summary>
         /// WAV file header size
         /// </summary>
@@ -66,7 +54,7 @@ namespace Recorder
         /// </summary>
         [Tooltip("Set a keyboard key for saving the Audio File")]
         public KeyCode keyCode;
-        
+
         /// <summary>
         /// Audio Player Script for Playing Audio Files
         /// </summary>
@@ -78,19 +66,18 @@ namespace Recorder
         /// </summary>
         [Tooltip("Set max duration of the audio file in seconds")]
         public int timeToRecord = 30;
-        
+
         /// <summary>
         /// Hold Button to Record
         /// </summary>
         [Tooltip("Press and Hold Record button to Record")]
         public bool holdToRecord = false;
-        
+
         [SerializeField] private View _recorderView;
 
         #endregion
-        
-        
-        
+
+
         #region MonoBehaviour Callbacks
 
         private void Start()
@@ -180,48 +167,54 @@ namespace Recorder
 
         private void SaveRecording(string fileName = "Audio")
         {
-                while (!(Microphone.GetPosition(null) > 0)) { }
-                samplesData = new float[audioSource.clip.samples * audioSource.clip.channels];
-                audioSource.clip.GetData(samplesData, 0);
+            while (!(Microphone.GetPosition(null) > 0))
+            {
+            }
 
-                // Trim the silence at the end of the recording
-                var samples = samplesData.ToList();
-                int recordedSamples = (int)(samplesData.Length * (recordingTime / (float)timeToRecord));
+            samplesData = new float[audioSource.clip.samples * audioSource.clip.channels];
+            audioSource.clip.GetData(samplesData, 0);
 
-                if (recordedSamples < samplesData.Length - 1)
-                {
-                    samples.RemoveRange(recordedSamples, samplesData.Length - recordedSamples);
-                    samplesData = samples.ToArray();
-                }
+            // Trim the silence at the end of the recording
+            var samples = samplesData.ToList();
+            int recordedSamples = (int)(samplesData.Length * (recordingTime / (float)timeToRecord));
 
-                // Create the audio file after removing the silence
-                AudioClip audioClip = AudioClip.Create(fileName, samplesData.Length, audioSource.clip.channels, 44100, false);
-                audioClip.SetData(samplesData, 0);
+            if (recordedSamples < samplesData.Length - 1)
+            {
+                samples.RemoveRange(recordedSamples, samplesData.Length - recordedSamples);
+                samplesData = samples.ToArray();
+            }
 
-                // Assign Current Audio Clip to Audio Player
-                audioPlayer.audioClip = audioClip;
-                audioPlayer.UpdateClip();
+            // Create the audio file after removing the silence
+            AudioClip audioClip =
+                AudioClip.Create(fileName, samplesData.Length, audioSource.clip.channels, 44100, false);
+            audioClip.SetData(samplesData, 0);
 
-                string filePath = Path.Combine(Application.persistentDataPath, fileName + " " + DateTime.UtcNow.ToString("yyyy_MM_dd HH_mm_ss_ffff") + ".wav");
+            // Assign Current Audio Clip to Audio Player
+            audioPlayer.audioClip = audioClip;
+            audioPlayer.UpdateClip();
 
-                // Delete the file if it exists.
-                if (File.Exists(filePath))
-                {
-                    File.Delete(filePath);
-                }
-                try
-                {
-                    FileWriter.WriteWavFile(audioClip, filePath, HEADER_SIZE);
-                    _recorderView.OnRecordingSaved($"Audio saved at {filePath}");
-                    Debug.Log("File Saved Successfully at " + filePath);
-                }
-                catch (DirectoryNotFoundException)
-                {
-                    Debug.LogError("Persistent Data Path not found!");
-                }
+            string filePath = Path.Combine(Application.persistentDataPath,
+                fileName + " " + DateTime.UtcNow.ToString("yyyy_MM_dd HH_mm_ss_ffff") + ".wav");
 
-                isRecording = false;
-                Microphone.End(Microphone.devices[0]);
+            // Delete the file if it exists.
+            if (File.Exists(filePath))
+            {
+                File.Delete(filePath);
+            }
+
+            try
+            {
+                FileWriter.WriteWavFile(audioClip, filePath, HEADER_SIZE);
+                _recorderView.OnRecordingSaved($"Audio saved at {filePath}");
+                Debug.Log("File Saved Successfully at " + filePath);
+            }
+            catch (DirectoryNotFoundException)
+            {
+                Debug.LogError("Persistent Data Path not found!");
+            }
+
+            isRecording = false;
+            Microphone.End(Microphone.devices[0]);
         }
 
         #endregion

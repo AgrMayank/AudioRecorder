@@ -4,9 +4,9 @@ namespace Recorder
 {
     public abstract class View : MonoBehaviour
     {
-        protected Recorder _recorder;
+        protected AudioRecordHandler audioRecordHandler;
         
-        public virtual void Init(Recorder recorder) => _recorder = recorder;
+        public virtual void Init(AudioRecordHandler audioRecordHandler) => this.audioRecordHandler = audioRecordHandler;
         public abstract void OnStartRecording();
         public abstract void OnStopRecording();
         public abstract void OnRecordingSaved(string message);

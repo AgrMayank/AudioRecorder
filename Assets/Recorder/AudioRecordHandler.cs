@@ -14,10 +14,10 @@ namespace Recorder
     [RequireComponent(typeof(AudioSource))]
     public class AudioRecordHandler : MonoBehaviour, IPointerClickHandler, IPointerDownHandler, IPointerUpHandler
     {
-        /// <summary>
-        /// A flag that represents if the recorder is recording a voice or not.
-        /// </summary>
-        public bool isRecording { get; private set; }
+        // /// <summary>
+        // /// A flag that represents if the recorder is recording a voice or not.
+        // /// </summary>
+        // public bool isRecording { get; private set; }
 
 
         /// <summary>
@@ -80,12 +80,13 @@ namespace Recorder
 
         private void Start()
         {
-            _recorderView.Init(this);
+            // _recorderView.Init(this);
+            // _recorderView.Init();
             AuthorizeMicrophone();
 
             // Get the AudioSource component
             audioSource = GetComponent<AudioSource>();
-            isRecording = false;
+            // isRecording = false;
         }
 
         private static void AuthorizeMicrophone()
@@ -102,25 +103,30 @@ namespace Recorder
 
         private void Update()
         {
-            if (isRecording)
+            // if (isRecording)
+            if (AudioRecorder.IsRecording)
             {
                 AudioRecorder.UpdateRecordingTime();
                 recordingTime += Time.deltaTime;
                 CheckRecordingTime();
             }
-            else CheckRecordKey();
+            // else CheckRecordKey();
+            CheckRecordKey();
         }
 
         private void CheckRecordingTime()
         {
-            if (recordingTime >= timeToRecord) StopRecording();
+            // if (recordingTime >= timeToRecord) StopRecording();
+            if (recordingTime >= timeToRecord) StartCoroutine(StopRecording());
         }
 
         private void CheckRecordKey()
         {
             if (holdToRecord) return;
             if (!Input.GetKeyDown(keyCode)) return;
-            if (isRecording) StopRecording();
+            // if (isRecording) StopRecording();
+            // if (AudioRecorder.IsRecording) StopRecording();
+            if (AudioRecorder.IsRecording) StartCoroutine(StopRecording());
             else StartRecording();
         }
 
@@ -131,7 +137,8 @@ namespace Recorder
         public virtual void OnPointerClick(PointerEventData eventData)
         {
             if (holdToRecord) return;
-            if (isRecording) StopRecording();
+            // if (isRecording) StopRecording();
+            if (AudioRecorder.IsRecording) StartCoroutine(StopRecording());
             else StartRecording();
         }
 
@@ -151,14 +158,14 @@ namespace Recorder
 
         public void StartRecording()
         {
-            isRecording = true;
+            // isRecording = true;
             AudioRecorder.StartRecording(audioSource, timeToRecord);
             _recorderView.OnStartRecording();
         }
 
         public IEnumerator StopRecording(string fileName = "Audio")
         {
-            isRecording = false;
+            // isRecording = false;
             _recorderView.OnStopRecording();
             var filePath = "";
 

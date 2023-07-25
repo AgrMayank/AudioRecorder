@@ -4,7 +4,6 @@ using System.Linq;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
 using UnityEngine.EventSystems;
 
 #if UNITY_IOS
@@ -72,27 +71,12 @@ namespace Recorder
         /// </summary>
         [Tooltip("Audio Player Script for Playing Audio Files")]
         public AudioPlayer audioPlayer;
-        
-        // /// <summary>
-        // /// Show the Filepath on the screen, etc 
-        // /// </summary>
-        // public TMP_Text ConsoleText;
-        
-        // /// <summary>
-        // /// Show the Recording Time on the screen
-        // /// </summary>
-        // public TMP_Text RecordingTimeText;
-        
+
         /// <summary>
         /// Set a Button to trigger recording or saving the Audio WAV file 
         /// </summary>
         public Button RecordButton;
-        
-        // /// <summary>
-        // /// Record or Save Image for the Record Button
-        // /// </summary>
-        // public Image RecordImage, SaveImage;
-        
+
         /// <summary>
         /// Set max duration of the audio file in seconds
         /// </summary>
@@ -104,30 +88,23 @@ namespace Recorder
         /// </summary>
         [Tooltip("Press and Hold Record button to Record")]
         public bool holdToRecord = false;
+        
+        [SerializeField] private View _recorderView;
 
         #endregion
-
-
-
-
-        [SerializeField] private View _recorderView;
         
         
         
-
         #region MonoBehaviour Callbacks
 
         private void Start()
         {
-            
             _recorderView.Init(this);
-            
             AuthorizeMicrophone();
 
             // Get the AudioSource component
             audioSource = GetComponent<AudioSource>();
             isRecording = false;
-            // ConsoleText.text = "";
         }
 
         private static void AuthorizeMicrophone()
@@ -147,50 +124,7 @@ namespace Recorder
             recordingTime += Time.deltaTime;
             CheckRecordKey();
             CheckRecordingTime();
-            // SetTexts();
         }
-
-        // private void SetTexts()
-        // {
-        //     if (isRecording)
-        //     {
-        //         ConsoleText.text = "";
-        //         recordingTime += Time.deltaTime;
-        //
-        //         minute = (int)(recordingTime / 60);
-        //         second = (int)(recordingTime % 60);
-        //
-        //         if (minute < 10)
-        //         {
-        //             if (second < 10)
-        //             {
-        //                 RecordingTimeText.text = "0" + minute + ":0" + second;
-        //             }
-        //             else
-        //             {
-        //                 RecordingTimeText.text = "0" + minute + ":" + second;
-        //             }
-        //         }
-        //         else if (second < 10)
-        //         {
-        //             RecordingTimeText.text = minute + ":0" + second;
-        //         }
-        //         else
-        //         {
-        //             RecordingTimeText.text = minute + ":" + second;
-        //         }
-        //
-        //         RecordImage.gameObject.SetActive(false);
-        //         SaveImage.gameObject.SetActive(true);
-        //     }
-        //     else
-        //     {
-        //         RecordingTimeText.text = "00:00";
-        //
-        //         RecordImage.gameObject.SetActive(true);
-        //         SaveImage.gameObject.SetActive(false);
-        //     }
-        // }
 
         private void CheckRecordingTime()
         {
@@ -201,13 +135,6 @@ namespace Recorder
         {
             if (holdToRecord) return;
             if (!Input.GetKeyDown(keyCode)) return;
-            
-            // if (!isRecording) StartRecording();
-            // else
-            // {
-            //     SaveRecording();
-            // }
-            
             if (isRecording) StopRecording();
             else StartRecording();
         }
@@ -237,7 +164,6 @@ namespace Recorder
         {
             Vector3 originalScale = button.transform.localScale;
             Vector3 destinationScale = new Vector3(scaleFactor, scaleFactor, scaleFactor);
-
             float currentTime = 0.0f;
 
             do
@@ -257,14 +183,9 @@ namespace Recorder
         {
             recordingTime = 0f;
             isRecording = true;
-
             StartCoroutine(ScaleOverTime(RecordButton.gameObject, 1.2f));
-
             Microphone.End(Microphone.devices[0]);
             audioSource.clip = Microphone.Start(Microphone.devices[0], false, timeToRecord, 44100);
-
-
-
             _recorderView.OnStartRecording();
         }
 
@@ -311,14 +232,8 @@ namespace Recorder
                 }
                 try
                 {
-                    // WriteWAVFile(audioClip, filePath);
                     FileWriter.WriteWavFile(audioClip, filePath, HEADER_SIZE);
-                    // ConsoleText.text = "Audio Saved at: " + filePath;
-                    
                     _recorderView.OnRecordingSaved($"Audio saved at {filePath}");
-                    
-                    
-                    
                     Debug.Log("File Saved Successfully at " + filePath);
                 }
                 catch (DirectoryNotFoundException)

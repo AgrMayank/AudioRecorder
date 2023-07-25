@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.IO;
 using System.Linq;
 using UnityEngine;
@@ -106,6 +107,7 @@ namespace Recorder
         {
             if (isRecording)
             {
+                AudioRecorder.UpdateRecordingTime();
                 recordingTime += Time.deltaTime;
                 CheckRecordingTime();
             }
@@ -143,7 +145,11 @@ namespace Recorder
 
         void IPointerUpHandler.OnPointerUp(PointerEventData eventData)
         {
-            if (holdToRecord) StopRecording();
+            Debug.Log("void IPointerUpHandler.OnPointerUp(PointerEventData eventData)");
+            
+            // if (holdToRecord) StopRecording();
+            // if (holdToRecord) StartCoroutine(nameof(StopRecording));
+            if (holdToRecord) StartCoroutine(StopRecording());
         }
 
         #endregion
@@ -152,70 +158,122 @@ namespace Recorder
 
         public void StartRecording()
         {
-            recordingTime = 0f;
+            // recordingTime = 0f;
+            // isRecording = true;
+            // Microphone.End(Microphone.devices[0]);
+            // audioSource.clip = Microphone.Start(Microphone.devices[0], false, timeToRecord, 44100);
+
+            
+            
             isRecording = true;
-            Microphone.End(Microphone.devices[0]);
-            audioSource.clip = Microphone.Start(Microphone.devices[0], false, timeToRecord, 44100);
+            
+            AudioRecorder.StartRecording(audioSource, timeToRecord);
+            
             _recorderView.OnStartRecording();
         }
 
-        public void StopRecording(string fileName = "Audio")
+        // public void StopRecording(string fileName = "Audio")
+        public IEnumerator StopRecording(string fileName = "Audio")
         {
-            _recorderView.OnStopRecording();
-            SaveRecording();
-        }
 
-        private void SaveRecording(string fileName = "Audio")
-        {
-            while (!(Microphone.GetPosition(null) > 0))
-            {
-            }
-
-            samplesData = new float[audioSource.clip.samples * audioSource.clip.channels];
-            audioSource.clip.GetData(samplesData, 0);
-
-            // Trim the silence at the end of the recording
-            var samples = samplesData.ToList();
-            int recordedSamples = (int)(samplesData.Length * (recordingTime / (float)timeToRecord));
-
-            if (recordedSamples < samplesData.Length - 1)
-            {
-                samples.RemoveRange(recordedSamples, samplesData.Length - recordedSamples);
-                samplesData = samples.ToArray();
-            }
-
-            // Create the audio file after removing the silence
-            AudioClip audioClip =
-                AudioClip.Create(fileName, samplesData.Length, audioSource.clip.channels, 44100, false);
-            audioClip.SetData(samplesData, 0);
-
-            // Assign Current Audio Clip to Audio Player
-            audioPlayer.audioClip = audioClip;
-            audioPlayer.UpdateClip();
-
-            string filePath = Path.Combine(Application.persistentDataPath,
-                fileName + " " + DateTime.UtcNow.ToString("yyyy_MM_dd HH_mm_ss_ffff") + ".wav");
-
-            // Delete the file if it exists.
-            if (File.Exists(filePath))
-            {
-                File.Delete(filePath);
-            }
-
-            try
-            {
-                FileWriter.WriteWavFile(audioClip, filePath, HEADER_SIZE);
-                _recorderView.OnRecordingSaved($"Audio saved at {filePath}");
-                Debug.Log("File Saved Successfully at " + filePath);
-            }
-            catch (DirectoryNotFoundException)
-            {
-                Debug.LogError("Persistent Data Path not found!");
-            }
-
+            Debug.Log("public IEnumerator StopRecording(string fileName = ");
+            
             isRecording = false;
-            Microphone.End(Microphone.devices[0]);
+            
+            
+            
+            _recorderView.OnStopRecording();
+            // SaveRecording();
+            
+            // AudioRecorder.StopRecording(fileName);
+
+            var filePath = "";
+            
+            // AudioRecorder.StopRecording(audioSource, fileName);
+            
+            // yield return WaitUntil(() => AudioRecorder.StopRecording(audioSource, fileName) != "")
+            // yield return new WaitUntil(() => AudioRecorder.SaveRecording(audioSource, fileName) != "");
+            yield return new WaitUntil(() =>
+            {
+                filePath = AudioRecorder.SaveRecording(audioSource, fileName);
+                // return AudioRecorder.SaveRecording(audioSource, fileName) != "";
+                // return filePath != "";
+                return !string.IsNullOrEmpty(filePath);
+            });
+            
+            
+
+            // yield return WaitUntil(() => string.IsNullOrEmpty(filePath));
+            
+            
+            _recorderView.OnRecordingSaved($"Audio saved at {filePath}");
+            
         }
+
+        
+        
+        // private void SaveRecording(string fileName = "Audio")
+        // {
+        //     // while (!(Microphone.GetPosition(null) > 0))
+        //     // {
+        //     // }
+        //     //
+        //     // samplesData = new float[audioSource.clip.samples * audioSource.clip.channels];
+        //     // audioSource.clip.GetData(samplesData, 0);
+        //     //
+        //     // // Trim the silence at the end of the recording
+        //     // var samples = samplesData.ToList();
+        //     // int recordedSamples = (int)(samplesData.Length * (recordingTime / (float)timeToRecord));
+        //     //
+        //     // if (recordedSamples < samplesData.Length - 1)
+        //     // {
+        //     //     samples.RemoveRange(recordedSamples, samplesData.Length - recordedSamples);
+        //     //     samplesData = samples.ToArray();
+        //     // }
+        //     //
+        //     // // Create the audio file after removing the silence
+        //     // AudioClip audioClip =
+        //     //     AudioClip.Create(fileName, samplesData.Length, audioSource.clip.channels, 44100, false);
+        //     // audioClip.SetData(samplesData, 0);
+        //
+        //     
+        //     
+        //     
+        //     
+        //     
+        //     //
+        //     // // Assign Current Audio Clip to Audio Player
+        //     // // audioPlayer.audioClip = audioClip;
+        //     // audioPlayer.audioClip = audioClip;
+        //     // audioPlayer.UpdateClip();
+        //
+        //     
+        //     
+        //     
+        //     
+        //     // string filePath = Path.Combine(Application.persistentDataPath,
+        //     //     fileName + " " + DateTime.UtcNow.ToString("yyyy_MM_dd HH_mm_ss_ffff") + ".wav");
+        //     //
+        //     // // Delete the file if it exists.
+        //     // if (File.Exists(filePath))
+        //     // {
+        //     //     File.Delete(filePath);
+        //     // }
+        //     //
+        //     // try
+        //     // {
+        //     //     FileWriter.WriteWavFile(audioClip, filePath, HEADER_SIZE);
+        //     //     _recorderView.OnRecordingSaved($"Audio saved at {filePath}");
+        //     //     Debug.Log("File Saved Successfully at " + filePath);
+        //     // }
+        //     // catch (DirectoryNotFoundException)
+        //     // {
+        //     //     Debug.LogError("Persistent Data Path not found!");
+        //     // }
+        //     //
+        //     // isRecording = false;
+        //     // Microphone.End(Microphone.devices[0]);
+        // }
 
         #endregion
     }

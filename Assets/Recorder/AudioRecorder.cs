@@ -33,12 +33,7 @@ namespace Recorder
             Microphone.End(Microphone.devices[0]);
             audioSource.clip = Microphone.Start(Microphone.devices[0], false, timeToRecord, 44100);
         }
-        
-        public static void StopRecording(AudioSource audioSource, string fileName = "Audio")
-        {
-            SaveRecording(audioSource, fileName);
-        }
-        
+
         public static string SaveRecording(AudioSource audioSource, string fileName = "Audio")
         {
             IsRecording = false;

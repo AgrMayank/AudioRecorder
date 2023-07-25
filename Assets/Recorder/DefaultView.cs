@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using TMPro;
 using UnityEngine;
@@ -48,13 +47,6 @@ namespace Recorder
         /// </summary>
         private int _second = 0;
 
-        // public override void Init(AudioRecordHandler audioRecordHandler)
-        // public override void Init()
-        // {
-        //     // base.Init(audioRecordHandler);
-        //     _consoleText.text = "";
-        // }
-
         private void OnEnable()
         {
             _consoleText.text = "";
@@ -77,7 +69,6 @@ namespace Recorder
         
         IEnumerator UpdateRecordingTime()
         {
-            // while (audioRecordHandler.isRecording)
             while (AudioRecorder.IsRecording)
             {
                 _consoleText.text = "";
@@ -97,9 +88,7 @@ namespace Recorder
 
         private void CalculateMinuteAndSecond()
         {
-            // _minute = (int)(audioRecordHandler.recordingTime / 60);
             _minute = (int)(AudioRecorder.RecordingTime / 60);
-            // _second = (int)(audioRecordHandler.recordingTime % 60);
             _second = (int)(AudioRecorder.RecordingTime % 60);
         }
 

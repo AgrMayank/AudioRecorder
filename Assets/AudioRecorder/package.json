@@ -1,10 +1,16 @@
 {
-	"name": "in.mayank.audio-recorder",
-	"displayName":"Audio Recorder",
-	"version": "1.0.0",
-    "unity": "2019.2",
-    "keywords": ["audio", "recorder", "audio recorder"],
-    "category": "2D",
-	"description": "Use Audio Recorder to Record and Save Audio via Microphone",
-    "dependencies": {}
+  "name": "in.mayank.audio-recorder",
+  "displayName": "Audio Recorder",
+  "version": "1.0.0",
+  "unity": "2019.2",
+  "keywords": [
+    "audio",
+    "recorder",
+    "audio recorder"
+  ],
+  "category": "2D",
+  "description": "Use Audio Recorder to Record and Save Audio via Microphone",
+  "dependencies": {
+    "com.unity.textmeshpro": "3.0.6"
+  }
 }

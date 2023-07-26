@@ -31,7 +31,6 @@ namespace Mayank.AudioRecorder.Player
         public void UpdateClip()
         {
             audioSource.clip = audioClip;
-
             audioSlider.direction = Slider.Direction.LeftToRight;
             audioSlider.minValue = 0;
             audioSlider.maxValue = audioSource.clip.length;

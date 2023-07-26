@@ -10,27 +10,27 @@ namespace Mayank.AudioRecorder.Recorder.View
         /// <summary>
         /// Show the Filepath on the screen, etc 
         /// </summary>
-        [SerializeField] protected TMP_Text _consoleText;
+        [SerializeField] private TMP_Text consoleText;
         
         /// <summary>
         /// Show the Recording Time on the screen
         /// </summary>
-        [SerializeField] protected TMP_Text _recordingTimeText;
+        [SerializeField] private TMP_Text recordingTimeText;
 
         /// <summary>
         /// Record Image for the Record Button
         /// </summary>
-        [SerializeField] protected Image _recordImage;
+        [SerializeField] private Image recordImage;
 
         /// <summary>
         /// Save Image for the Record Button
         /// </summary>
-        [SerializeField] protected Image _saveImage;
+        [SerializeField] private Image saveImage;
         
         /// <summary>
         /// Set a Button to trigger recording or saving the Audio WAV file 
         /// </summary>
-        [SerializeField] private Button _recordButton;
+        [SerializeField] private Button recordButton;
         
         /// <summary>
         /// The coroutine that updates time text.
@@ -49,7 +49,7 @@ namespace Mayank.AudioRecorder.Recorder.View
 
         private void OnEnable()
         {
-            _consoleText.text = "";
+            consoleText.text = "";
         }
 
         private IEnumerator ScaleOverTime(GameObject button, float scaleFactor)
@@ -71,16 +71,16 @@ namespace Mayank.AudioRecorder.Recorder.View
         {
             while (Core.AudioRecorder.IsRecording)
             {
-                _consoleText.text = "";
+                consoleText.text = "";
                 CalculateMinuteAndSecond();
                 
                 if (_minute < 10)
                 {
-                    if (_second < 10) _recordingTimeText.text = "0" + _minute + ":0" + _second;
-                    else _recordingTimeText.text = "0" + _minute + ":" + _second;
+                    if (_second < 10) recordingTimeText.text = "0" + _minute + ":0" + _second;
+                    else recordingTimeText.text = "0" + _minute + ":" + _second;
                 }
-                else if (_second < 10) _recordingTimeText.text = _minute + ":0" + _second;
-                else _recordingTimeText.text = _minute + ":" + _second;
+                else if (_second < 10) recordingTimeText.text = _minute + ":0" + _second;
+                else recordingTimeText.text = _minute + ":" + _second;
         
                 yield return new WaitForSeconds(1);
             }
@@ -94,25 +94,25 @@ namespace Mayank.AudioRecorder.Recorder.View
 
         public override void OnStartRecording()
         {
-            StartCoroutine(ScaleOverTime(_recordButton.gameObject, 1.2f));
-            _recordingTimeText.text = "00:00";
-            _recordImage.gameObject.SetActive(true);
-            _saveImage.gameObject.SetActive(false);
+            StartCoroutine(ScaleOverTime(recordButton.gameObject, 1.2f));
+            recordingTimeText.text = "00:00";
+            recordImage.gameObject.SetActive(true);
+            saveImage.gameObject.SetActive(false);
             _timeUpdateRoutine = StartCoroutine(nameof(UpdateRecordingTime));
         }
 
         public override void OnStopRecording()
         {
-            StartCoroutine(ScaleOverTime(_recordButton.gameObject, 1f));
-            _recordingTimeText.text = "00:00";
-            _recordImage.gameObject.SetActive(true);
-            _saveImage.gameObject.SetActive(false);
+            StartCoroutine(ScaleOverTime(recordButton.gameObject, 1f));
+            recordingTimeText.text = "00:00";
+            recordImage.gameObject.SetActive(true);
+            saveImage.gameObject.SetActive(false);
             StopCoroutine(_timeUpdateRoutine);
         }
         
         public override void OnRecordingSaved(string message)
         {
-            _consoleText.text = message;
+            consoleText.text = message;
         }
     }
 }

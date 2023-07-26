@@ -1,39 +1,24 @@
-﻿using TMPro;
-using UnityEngine;
-using UnityEngine.Serialization;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 namespace Mayank.AudioRecorder.Player
 {
     public class AudioPlayer : MonoBehaviour
     {
-        // public Slider audioSlider;
         [SerializeField] private Slider audioSlider;
-        // public AudioSource audioSource;
         [SerializeField] private AudioSource audioSource;
-
-        [HideInInspector]
-        public AudioClip audioClip;
-
-        // public Image PlayImage, PauseImage;
-        // public Image PlayImage;
-        // [FormerlySerializedAs("PlayImage")] public Image playImage;
-        // [FormerlySerializedAs("PlayImage")] public Image playImage;
         [SerializeField] private Image playImage;
-        // public Image PauseImage;
-        // [FormerlySerializedAs("PauseImage")] public Image pauseImage;
         [SerializeField] private Image pauseImage;
 
+        [HideInInspector] public AudioClip audioClip;
+        
         private bool _isPaused = false;
-
         private AudioSource _audioSource;
 
         private void Start()
         {
-            
             _audioSource = GetComponent<AudioSource>();
             _isPaused = false;
-
             IsPlaying(false);
         }
 
@@ -74,15 +59,7 @@ namespace Mayank.AudioRecorder.Player
 
         void Update()
         {
-            // if (audioClip == null)
-            // {
-            //     ConsoleText.text = "No Audio Clip Found!\nRecord Something First.";
-            // }
-
-            // audioSlider.value = GetComponent<AudioSource>().time;
             audioSlider.value = _audioSource.time;
-
-            // if ((audioSlider.value == audioSlider.maxValue || audioSlider.value == audioSlider.minValue) && !audioSource.isPlaying)
             if ((audioSlider.value <= audioSlider.maxValue 
                  && audioSlider.value >= audioSlider.minValue) ||
                 audioSource.isPlaying) return;

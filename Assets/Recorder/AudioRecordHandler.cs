@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.Serialization;
 
 #if UNITY_IOS
 using UnityEngine.iOS;
@@ -134,8 +133,10 @@ namespace Recorder
                 writingResult = AudioRecorder.SaveRecording(audioSource, fileName);
                 return writingResult != null;
             });
-            
-            recorderView.OnRecordingSaved($"Audio saved at {writingResult.result}");
+
+            recorderView.OnRecordingSaved(writingResult.status
+                ? $"Audio saved at {writingResult.result}"
+                : $"Something went wrong while saving audio file \n {writingResult.result}");
         }
         #endregion Recorder Functions
     }

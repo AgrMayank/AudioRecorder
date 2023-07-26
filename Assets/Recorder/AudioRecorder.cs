@@ -38,7 +38,50 @@ namespace Recorder
         {
             IsRecording = false;
             Microphone.End(Microphone.devices[0]);
+            var audioClip = CreateAudioClip(audioSource, fileName);
+            var wavWritingResult = TryCreateAudioFile(fileName, audioClip);
+            return wavWritingResult;
+        }
 
+        private static FileWritingResultModel TryCreateAudioFile(string fileName, AudioClip audioClip)
+        {
+            string filePath = Path.Combine(Application.persistentDataPath,
+                fileName + " " + DateTime.UtcNow.ToString("yyyy_MM_dd HH_mm_ss_ffff") + ".wav");
+
+            // Delete the file if it exists.
+            if (File.Exists(filePath))
+            {
+                File.Delete(filePath);
+            }
+
+            FileWritingResultModel wavWritingResult;
+
+            try
+            {
+                FileWriter.WriteWavFile(audioClip, filePath, HeaderSize);
+
+                wavWritingResult = new FileWritingResultModel()
+                {
+                    status = true,
+                    result = filePath,
+                    error = null
+                };
+            }
+            catch (Exception exception)
+            {
+                wavWritingResult = new FileWritingResultModel()
+                {
+                    status = false,
+                    result = null,
+                    error = exception.Message
+                };
+            }
+
+            return wavWritingResult;
+        }
+
+        private static AudioClip CreateAudioClip(AudioSource audioSource, string fileName)
+        {
             var samplesData = new float[audioSource.clip.samples * audioSource.clip.channels];
             audioSource.clip.GetData(samplesData, 0);
 
@@ -56,40 +99,7 @@ namespace Recorder
             AudioClip audioClip =
                 AudioClip.Create(fileName, samplesData.Length, audioSource.clip.channels, 44100, false);
             audioClip.SetData(samplesData, 0);
-
-            string filePath = Path.Combine(Application.persistentDataPath,
-                fileName + " " + DateTime.UtcNow.ToString("yyyy_MM_dd HH_mm_ss_ffff") + ".wav");
-            
-            // Delete the file if it exists.
-            if (File.Exists(filePath))
-            {
-                File.Delete(filePath);
-            }
-
-            FileWritingResultModel wavWritingResult;
-            
-            try
-            {
-                FileWriter.WriteWavFile(audioClip, filePath, HeaderSize);
-
-                wavWritingResult = new FileWritingResultModel()
-                {
-                    status = true,
-                    result = filePath,
-                    error = null
-                };
-            }
-            catch(Exception exception)
-            {
-                wavWritingResult = new FileWritingResultModel()
-                {
-                    status = false,
-                    result = null,
-                    error = exception.Message
-                };
-            }
-
-            return wavWritingResult;
+            return audioClip;
         }
     }
 }

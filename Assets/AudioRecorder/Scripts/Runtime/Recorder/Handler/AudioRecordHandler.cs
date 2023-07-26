@@ -2,6 +2,7 @@
 using Mayank.AudioRecorder.Utility;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.Serialization;
 #if UNITY_IOS
 using UnityEngine.iOS;
 #endif
@@ -49,8 +50,9 @@ namespace Mayank.AudioRecorder.Recorder.Handler
         /// <summary>
         /// The component that Handles recorder UI
         /// </summary>
+        [FormerlySerializedAs("recorderView")]
         [Tooltip("AudioRecorderView component for recorder")]
-        [SerializeField] private View.View recorderView;
+        [SerializeField] private View.RecorderView recorderRecorderView;
         #endregion
 
 
@@ -121,13 +123,13 @@ namespace Mayank.AudioRecorder.Recorder.Handler
         {
             if (!Core.AudioRecorder.MicrophoneIsAvailable()) return;
             Core.AudioRecorder.StartRecording(audioSource, timeToRecord);
-            recorderView.OnStartRecording();
+            recorderRecorderView.OnStartRecording();
         }
 
         private IEnumerator StopRecording(string fileName = "Audio")
         {
             if (!Core.AudioRecorder.IsRecording) yield break;
-            recorderView.OnStopRecording();
+            recorderRecorderView.OnStopRecording();
             FileWritingResultModel writingResult = null; 
 
             yield return new WaitUntil(() =>
@@ -136,7 +138,7 @@ namespace Mayank.AudioRecorder.Recorder.Handler
                 return writingResult != null;
             });
 
-            recorderView.OnRecordingSaved(writingResult.status
+            recorderRecorderView.OnRecordingSaved(writingResult.status
                 ? $"Audio saved at {writingResult.result}"
                 : $"Something went wrong while saving audio file \n {writingResult.result}");
         }

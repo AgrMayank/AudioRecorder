@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 namespace Mayank.AudioRecorder.Recorder.View
 {
-    public class DefaultView : View
+    public class DefaultRecorderView : RecorderView
     {
         /// <summary>
         /// Show the Filepath on the screen, etc 

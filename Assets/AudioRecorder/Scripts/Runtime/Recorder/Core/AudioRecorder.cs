@@ -2,7 +2,6 @@ using System;
 using System.IO;
 using System.Linq;
 using Mayank.AudioRecorder.Utility;
-using Recorder;
 using UnityEngine;
 
 namespace Mayank.AudioRecorder.Recorder.Core

@@ -1,14 +1,13 @@
 ﻿using System.Collections;
-using Mayank.AudioRecorder.Recorder.Core;
 using Mayank.AudioRecorder.Utility;
+using Recorder;
 using UnityEngine;
 using UnityEngine.EventSystems;
-
 #if UNITY_IOS
 using UnityEngine.iOS;
 #endif
 
-namespace Recorder
+namespace Mayank.AudioRecorder.Recorder.Handler
 {
     /// <summary>
     /// Add this component to a GameObject to Record Mic Input 
@@ -66,8 +65,8 @@ namespace Recorder
         private void Update()
         {
             CheckRecordKey();
-            if (!AudioRecorder.IsRecording) return;
-            AudioRecorder.UpdateRecordingTime();
+            if (!Core.AudioRecorder.IsRecording) return;
+            Core.AudioRecorder.UpdateRecordingTime();
             CheckRecordingTime();
         }
         #endregion MonoBehaviour Callbacks
@@ -77,7 +76,7 @@ namespace Recorder
         public void OnPointerClick(PointerEventData eventData)
         {
             if (holdToRecord) return;
-            if (AudioRecorder.IsRecording) StartCoroutine(StopRecording());
+            if (Core.AudioRecorder.IsRecording) StartCoroutine(StopRecording());
             else StartRecording();
         }
 
@@ -108,33 +107,33 @@ namespace Recorder
         
         private void CheckRecordingTime()
         {
-            if (AudioRecorder.RecordingTime >= timeToRecord) StartCoroutine(StopRecording());
+            if (Core.AudioRecorder.RecordingTime >= timeToRecord) StartCoroutine(StopRecording());
         }
 
         private void CheckRecordKey()
         {
             if (holdToRecord) return;
             if (!Input.GetKeyDown(keyCode)) return;
-            if (AudioRecorder.IsRecording) StartCoroutine(StopRecording());
+            if (Core.AudioRecorder.IsRecording) StartCoroutine(StopRecording());
             else StartRecording();
         }
         
         private void StartRecording()
         {
-            if (!AudioRecorder.MicrophoneIsAvailable()) return;
-            AudioRecorder.StartRecording(audioSource, timeToRecord);
+            if (!Core.AudioRecorder.MicrophoneIsAvailable()) return;
+            Core.AudioRecorder.StartRecording(audioSource, timeToRecord);
             recorderView.OnStartRecording();
         }
 
         private IEnumerator StopRecording(string fileName = "Audio")
         {
-            if (!AudioRecorder.IsRecording) yield break;
+            if (!Core.AudioRecorder.IsRecording) yield break;
             recorderView.OnStopRecording();
             FileWritingResultModel writingResult = null; 
 
             yield return new WaitUntil(() =>
             {
-                writingResult = AudioRecorder.SaveRecording(audioSource, fileName);
+                writingResult = Core.AudioRecorder.SaveRecording(audioSource, fileName);
                 return writingResult != null;
             });
 

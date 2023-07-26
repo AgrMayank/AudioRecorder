@@ -26,11 +26,30 @@ namespace Recorder
             RecordingTime += Time.deltaTime;
         }
 
+        public static bool MicrophoneIsAvailable()
+        {
+            if (Microphone.devices == null || Microphone.devices.Length == 0)
+            {
+                Debug.LogError("No microphone found.");
+                return false;
+            }
+            
+            Debug.Log("Microphone is available");
+            return true;
+        }
+
         public static void StartRecording(AudioSource audioSource, int timeToRecord)
         {
             _timeToRecord = timeToRecord;
             RecordingTime = 0f;
             IsRecording = true;
+
+            // if (Microphone.devices == null || Microphone.devices.Length == 0)
+            // {
+            //     Debug.LogError("No microphone found.");
+            //     return;
+            // }
+            
             Microphone.End(Microphone.devices[0]);
             audioSource.clip = Microphone.Start(Microphone.devices[0], false, timeToRecord, 44100);
         }
@@ -38,6 +57,13 @@ namespace Recorder
         public static FileWritingResultModel SaveRecording(AudioSource audioSource, string fileName = "Audio")
         {
             IsRecording = false;
+            
+            // if (Microphone.devices == null || Microphone.devices.Length == 0)
+            // {
+            //     Debug.LogError("No microphone found.");
+            //     return null;
+            // }
+            
             Microphone.End(Microphone.devices[0]);
             var audioClip = CreateAudioClip(audioSource, fileName);
             var wavWritingResult = TryCreateAudioFile(fileName, audioClip);

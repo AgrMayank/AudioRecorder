@@ -119,12 +119,14 @@ namespace Recorder
         
         private void StartRecording()
         {
+            if (!AudioRecorder.MicrophoneIsAvailable()) return;
             AudioRecorder.StartRecording(audioSource, timeToRecord);
             recorderView.OnStartRecording();
         }
 
         private IEnumerator StopRecording(string fileName = "Audio")
         {
+            if (!AudioRecorder.IsRecording) yield break;
             recorderView.OnStopRecording();
             FileWritingResultModel writingResult = null; 
 

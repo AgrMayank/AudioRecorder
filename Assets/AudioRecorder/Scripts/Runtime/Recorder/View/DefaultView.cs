@@ -1,5 +1,6 @@
 using System.Collections;
 using Mayank.AudioRecorder.Recorder.Core;
+using Mayank.AudioRecorder.Recorder.View;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Recorder
+namespace Mayank.AudioRecorder.Recorder.View
 {
     public abstract class View : MonoBehaviour
     {

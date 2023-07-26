@@ -51,7 +51,7 @@ namespace Mayank.AudioRecorder.Recorder.Handler
         /// The component that Handles recorder UI
         /// </summary>
         [Tooltip("AudioRecorderView component for recorder")]
-        [SerializeField] private View recorderView;
+        [SerializeField] private View.View recorderView;
         #endregion
 
 

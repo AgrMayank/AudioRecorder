@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Recorder
+namespace Mayank.AudioRecorder.Player
 {
     public class AudioPlayer : MonoBehaviour
     {

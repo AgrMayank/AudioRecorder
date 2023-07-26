@@ -1,11 +1,9 @@
 using System.Collections;
-using Mayank.AudioRecorder.Recorder.Core;
-using Mayank.AudioRecorder.Recorder.View;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Recorder
+namespace Mayank.AudioRecorder.Recorder.View
 {
     public class DefaultView : View
     {
@@ -71,7 +69,7 @@ namespace Recorder
         
         private IEnumerator UpdateRecordingTime()
         {
-            while (AudioRecorder.IsRecording)
+            while (Core.AudioRecorder.IsRecording)
             {
                 _consoleText.text = "";
                 CalculateMinuteAndSecond();
@@ -90,8 +88,8 @@ namespace Recorder
 
         private void CalculateMinuteAndSecond()
         {
-            _minute = (int)(AudioRecorder.RecordingTime / 60);
-            _second = (int)(AudioRecorder.RecordingTime % 60);
+            _minute = (int)(Core.AudioRecorder.RecordingTime / 60);
+            _second = (int)(Core.AudioRecorder.RecordingTime % 60);
         }
 
         public override void OnStartRecording()

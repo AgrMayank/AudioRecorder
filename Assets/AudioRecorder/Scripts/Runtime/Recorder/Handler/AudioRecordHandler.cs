@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using Mayank.AudioRecorder.Utility;
-using Recorder;
 using UnityEngine;
 using UnityEngine.EventSystems;
 #if UNITY_IOS

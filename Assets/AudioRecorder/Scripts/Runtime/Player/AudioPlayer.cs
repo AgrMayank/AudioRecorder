@@ -1,34 +1,46 @@
 ﻿using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace Mayank.AudioRecorder.Player
 {
     public class AudioPlayer : MonoBehaviour
     {
-        public Slider audioSlider;
-        public AudioSource audioSource;
+        // public Slider audioSlider;
+        [SerializeField] private Slider audioSlider;
+        // public AudioSource audioSource;
+        [SerializeField] private AudioSource audioSource;
 
         [HideInInspector]
         public AudioClip audioClip;
 
-        public TMP_Text ConsoleText;
+        // public Image PlayImage, PauseImage;
+        // public Image PlayImage;
+        // [FormerlySerializedAs("PlayImage")] public Image playImage;
+        // [FormerlySerializedAs("PlayImage")] public Image playImage;
+        [SerializeField] private Image playImage;
+        // public Image PauseImage;
+        // [FormerlySerializedAs("PauseImage")] public Image pauseImage;
+        [SerializeField] private Image pauseImage;
 
-        public Image PlayImage, PauseImage;
+        private bool _isPaused = false;
 
-        private bool isPaused = false;
+        private AudioSource _audioSource;
 
         private void Start()
         {
-            isPaused = false;
+            
+            _audioSource = GetComponent<AudioSource>();
+            _isPaused = false;
 
             IsPlaying(false);
         }
 
         private void IsPlaying(bool isPlaying)
         {
-            PlayImage.gameObject.SetActive(!isPlaying);
-            PauseImage.gameObject.SetActive(isPlaying);
+            playImage.gameObject.SetActive(!isPlaying);
+            pauseImage.gameObject.SetActive(isPlaying);
         }
 
         public void UpdateClip()
@@ -46,9 +58,9 @@ namespace Mayank.AudioRecorder.Player
             {
                 audioSource.Pause();
                 IsPlaying(false);
-                isPaused = true;
+                _isPaused = true;
             }
-            else if (isPaused)
+            else if (_isPaused)
             {
                 IsPlaying(true);
                 audioSource.UnPause();
@@ -67,13 +79,15 @@ namespace Mayank.AudioRecorder.Player
             //     ConsoleText.text = "No Audio Clip Found!\nRecord Something First.";
             // }
 
-            audioSlider.value = GetComponent<AudioSource>().time;
+            // audioSlider.value = GetComponent<AudioSource>().time;
+            audioSlider.value = _audioSource.time;
 
-            if ((audioSlider.value == audioSlider.maxValue || audioSlider.value == audioSlider.minValue) && !audioSource.isPlaying)
-            {
-                IsPlaying(false);
-                isPaused = false;
-            }
+            // if ((audioSlider.value == audioSlider.maxValue || audioSlider.value == audioSlider.minValue) && !audioSource.isPlaying)
+            if ((audioSlider.value <= audioSlider.maxValue 
+                 && audioSlider.value >= audioSlider.minValue) ||
+                audioSource.isPlaying) return;
+            IsPlaying(false);
+            _isPaused = false;
         }
     }
 }

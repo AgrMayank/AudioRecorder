@@ -2,9 +2,10 @@ using System;
 using System.IO;
 using System.Linq;
 using Mayank.AudioRecorder.Utility;
+using Recorder;
 using UnityEngine;
 
-namespace Recorder
+namespace Mayank.AudioRecorder.Recorder.Core
 {
     public static class AudioRecorder
     {
@@ -43,13 +44,6 @@ namespace Recorder
             _timeToRecord = timeToRecord;
             RecordingTime = 0f;
             IsRecording = true;
-
-            // if (Microphone.devices == null || Microphone.devices.Length == 0)
-            // {
-            //     Debug.LogError("No microphone found.");
-            //     return;
-            // }
-            
             Microphone.End(Microphone.devices[0]);
             audioSource.clip = Microphone.Start(Microphone.devices[0], false, timeToRecord, 44100);
         }
@@ -57,13 +51,6 @@ namespace Recorder
         public static FileWritingResultModel SaveRecording(AudioSource audioSource, string fileName = "Audio")
         {
             IsRecording = false;
-            
-            // if (Microphone.devices == null || Microphone.devices.Length == 0)
-            // {
-            //     Debug.LogError("No microphone found.");
-            //     return null;
-            // }
-            
             Microphone.End(Microphone.devices[0]);
             var audioClip = CreateAudioClip(audioSource, fileName);
             var wavWritingResult = TryCreateAudioFile(fileName, audioClip);
@@ -72,7 +59,7 @@ namespace Recorder
 
         private static FileWritingResultModel TryCreateAudioFile(string fileName, AudioClip audioClip)
         {
-            string filePath = Path.Combine(Application.persistentDataPath,
+            var filePath = Path.Combine(Application.persistentDataPath,
                 fileName + " " + DateTime.UtcNow.ToString("yyyy_MM_dd HH_mm_ss_ffff") + ".wav");
 
             // Delete the file if it exists.
@@ -114,7 +101,7 @@ namespace Recorder
 
             // Trim the silence at the end of the recording
             var samples = samplesData.ToList();
-            int recordedSamples = (int)(samplesData.Length * (RecordingTime / (float)_timeToRecord));
+            var recordedSamples = (int)(samplesData.Length * (RecordingTime / (float)_timeToRecord));
 
             if (recordedSamples < samplesData.Length - 1)
             {
@@ -123,7 +110,7 @@ namespace Recorder
             }
 
             // Create the audio file after removing the silence
-            AudioClip audioClip =
+            var audioClip =
                 AudioClip.Create(fileName, samplesData.Length, audioSource.clip.channels, 44100, false);
             audioClip.SetData(samplesData, 0);
             return audioClip;

@@ -9,27 +9,27 @@ namespace Mayank.AudioRecorder.Recorder.Core
     public static class AudioRecorder
     {
         /// <summary>
-        /// The total time of the current recording audio.
+        /// The total duration of the current recording audio.
         /// </summary>
         public static float RecordingTime { get; private set; }
         
         /// <summary>
-        /// Represents if the recorder is recording or not. 
+        /// Indicates whether the recorder is currently recording or not.
         /// </summary>
         public static bool IsRecording { get; private set; }
 
         /// <summary>
-        /// The maximum allowed time of recording.
+        /// The maximum allowed recording time, in seconds.
         /// </summary>
         private static int _timeToRecord;
         
         /// <summary>
-        /// WAV file header size
+        /// The size of the WAV file header, in bytes.
         /// </summary>
         private const int HeaderSize = 44;
 
         /// <summary>
-        /// Updates the total recording time.
+        /// Updates the total recording time by adding the time elapsed since the last update.
         /// </summary>
         // ToDo: convert the following method to a asynchronous method
         public static void UpdateRecordingTime()
@@ -40,7 +40,7 @@ namespace Mayank.AudioRecorder.Recorder.Core
         /// <summary>
         /// Checks if any microphone is available.
         /// </summary>
-        /// <returns>A microphone is available or not.</returns>
+        /// <returns>True if a microphone is available, false otherwise.</returns>
         public static bool MicrophoneIsAvailable()
         {
             if (Microphone.devices == null || Microphone.devices.Length == 0)
@@ -54,10 +54,10 @@ namespace Mayank.AudioRecorder.Recorder.Core
         }
 
         /// <summary>
-        /// Starts recording the audio file.
+        /// Starts recording audio from the microphone and assigns it to the provided AudioSource.
         /// </summary>
-        /// <param name="audioSource">The intended AudioSource. It records the input audio (via microphone) on its AudioClip.</param>
-        /// <param name="timeToRecord">The maximum allowed time of the audio.</param>
+        /// <param name="audioSource">The AudioSource to record the input audio on its AudioClip.</param>
+        /// <param name="timeToRecord">The maximum allowed recording time, in seconds.</param>
         public static void StartRecording(AudioSource audioSource, int timeToRecord)
         {
             _timeToRecord = timeToRecord;
@@ -68,10 +68,10 @@ namespace Mayank.AudioRecorder.Recorder.Core
         }
 
         /// <summary>
-        /// Saves the recorded audio.
+        /// Saves the recorded audio to a WAV file.
         /// </summary>
-        /// <param name="audioSource">The AudioSource which includes the recorded audio.</param>
-        /// <param name="fileName">The intended name of the audio file.</param>
+        /// <param name="audioSource">The AudioSource containing the recorded audio.</param>
+        /// <param name="fileName">The name of the audio file to save.</param>
         /// <returns>The result of writing the audio file.</returns>
         public static FileWritingResultModel SaveRecording(AudioSource audioSource, string fileName = "Audio")
         {
@@ -83,7 +83,7 @@ namespace Mayank.AudioRecorder.Recorder.Core
         }
 
         /// <summary>
-        /// Tries to create audio file.
+        /// Tries to create a WAV file from the recorded audio.
         /// </summary>
         /// <param name="fileName">The intended name of the audio file.</param>
         /// <param name="audioClip">The recorded audio as an AudioClip.</param>
@@ -122,9 +122,9 @@ namespace Mayank.AudioRecorder.Recorder.Core
         }
 
         /// <summary>
-        /// Creates an AudioClip.
+        /// Creates an AudioClip from the recorded audio data and trims the silence at the end of the recording.
         /// </summary>
-        /// <param name="audioSource">The intended AudioSource.</param>
+        /// <param name="audioSource">The AudioSource that includes the recorded audio data.</param>
         /// <param name="fileName">The intended name of the AudioClip.</param>
         /// <returns>The created AudioClip.</returns>
         private static AudioClip CreateAudioClip(AudioSource audioSource, string fileName)

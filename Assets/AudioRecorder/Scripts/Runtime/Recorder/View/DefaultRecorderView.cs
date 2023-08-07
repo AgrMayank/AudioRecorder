@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 namespace Mayank.AudioRecorder.Recorder.View
 {
+    // ToDo: Add comments
+    
     public class DefaultRecorderView : RecorderView
     {
         /// <summary>

@@ -6,6 +6,8 @@ using UnityEngine;
 
 namespace Mayank.AudioRecorder.Recorder.Core
 {
+    // ToDo: Convert Debug.Log ... to Debug.UnityLogger ...
+    // ToDo: Add comments.
     public static class AudioRecorder
     {
         public static float RecordingTime { get; private set; }
@@ -30,11 +32,13 @@ namespace Mayank.AudioRecorder.Recorder.Core
         {
             if (Microphone.devices == null || Microphone.devices.Length == 0)
             {
-                Debug.LogError("No microphone found.");
+                // Debug.LogError("No microphone found.");
+                Debug.unityLogger.LogError("Microphone", "No microphone found.");
                 return false;
             }
             
-            Debug.Log("Microphone is available");
+            // Debug.Log("Microphone is available");
+            Debug.unityLogger.Log(LogType.Log, "Microphone is available");
             return true;
         }
 

@@ -9,6 +9,8 @@ using UnityEngine.iOS;
 
 namespace Mayank.AudioRecorder.Recorder.Handler
 {
+    // ToDo: Add comments
+    
     /// <summary>
     /// Add this component to a GameObject to Record Mic Input 
     /// </summary>
@@ -100,7 +102,7 @@ namespace Mayank.AudioRecorder.Recorder.Handler
             if (Application.HasUserAuthorization(UserAuthorization.Microphone)) Debug.Log("Microphone found");
             else
             {
-                Debug.Log("Microphone not found");
+                // Debug.Log("Microphone not found");
                 // Request iOS Microphone permission
                 Application.RequestUserAuthorization(UserAuthorization.Microphone);
             }

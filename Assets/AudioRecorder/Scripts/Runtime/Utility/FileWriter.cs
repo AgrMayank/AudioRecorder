@@ -5,6 +5,8 @@ using UnityEngine;
 
 namespace Mayank.AudioRecorder.Utility
 {
+    
+    // ToDo: Add comments
     public static class FileWriter
     {
         public static void WriteWavFile(AudioClip clip, string filePath, int headerSize)

@@ -3,6 +3,9 @@ using UnityEngine.UI;
 
 namespace Mayank.AudioRecorder.Player
 {
+    
+    // ToDo: Add comments
+    // ToDo: Load last audio file.
     public class AudioPlayer : MonoBehaviour
     {
         [SerializeField] private Slider audioSlider;

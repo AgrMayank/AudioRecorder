@@ -6,7 +6,6 @@ using UnityEngine;
 
 namespace Mayank.AudioRecorder.Recorder.Core
 {
-    // ToDo: Convert Debug.Log ... to Debug.UnityLogger ...
     // ToDo: Add comments.
     public static class AudioRecorder
     {
@@ -32,12 +31,10 @@ namespace Mayank.AudioRecorder.Recorder.Core
         {
             if (Microphone.devices == null || Microphone.devices.Length == 0)
             {
-                // Debug.LogError("No microphone found.");
                 Debug.unityLogger.LogError("Microphone", "No microphone found.");
                 return false;
             }
             
-            // Debug.Log("Microphone is available");
             Debug.unityLogger.Log(LogType.Log, "Microphone is available");
             return true;
         }
@@ -66,11 +63,7 @@ namespace Mayank.AudioRecorder.Recorder.Core
                 fileName + " " + DateTime.UtcNow.ToString("yyyy_MM_dd HH_mm_ss_ffff") + ".wav");
 
             // Delete the file if it exists.
-            if (File.Exists(filePath))
-            {
-                File.Delete(filePath);
-            }
-
+            if (File.Exists(filePath)) File.Delete(filePath);
             FileWritingResultModel wavWritingResult;
 
             try

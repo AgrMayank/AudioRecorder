@@ -112,9 +112,6 @@ namespace Mayank.AudioRecorder.Recorder.View
             StopCoroutine(_timeUpdateRoutine);
         }
         
-        public override void OnRecordingSaved(string message)
-        {
-            consoleText.text = message;
-        }
+        public override void OnRecordingSaved(string message) => consoleText.text = message;
     }
 }

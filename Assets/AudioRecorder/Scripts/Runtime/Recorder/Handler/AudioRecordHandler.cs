@@ -10,7 +10,7 @@ using UnityEngine.iOS;
 namespace Mayank.AudioRecorder.Recorder.Handler
 {
     // ToDo: Add comments
-    
+
     /// <summary>
     /// Add this component to a GameObject to Record Mic Input 
     /// </summary>
@@ -18,6 +18,7 @@ namespace Mayank.AudioRecorder.Recorder.Handler
     public class AudioRecordHandler : MonoBehaviour, IPointerClickHandler, IPointerDownHandler, IPointerUpHandler
     {
         #region Static Variables
+
         /// <summary>
         /// Audio Source to store Microphone Input, An AudioSource Component is required by default
         /// </summary>
@@ -27,10 +28,12 @@ namespace Mayank.AudioRecorder.Recorder.Handler
         /// The samples are floats ranging from -1.0f to 1.0f, representing the data in the audio clip
         /// </summary>
         private static float[] samplesData;
+
         #endregion
 
-        
+
         #region Editor Exposed Variables
+
         /// <summary>
         /// Set a keyboard key for saving the Audio File
         /// </summary>
@@ -52,19 +55,20 @@ namespace Mayank.AudioRecorder.Recorder.Handler
         /// <summary>
         /// The component that Handles recorder UI
         /// </summary>
-        [FormerlySerializedAs("recorderView")]
-        [Tooltip("AudioRecorderView component for recorder")]
-        [SerializeField] private View.RecorderView recorderRecorderView;
+        [FormerlySerializedAs("recorderView")] [Tooltip("AudioRecorderView component for recorder")] [SerializeField]
+        private View.RecorderView recorderRecorderView;
+
         #endregion
 
 
         #region MonoBehaviour Callbacks
+
         private void Start()
         {
             AuthorizeMicrophone();
             audioSource = GetComponent<AudioSource>();
         }
-        
+
         private void Update()
         {
             CheckRecordKey();
@@ -72,10 +76,12 @@ namespace Mayank.AudioRecorder.Recorder.Handler
             Core.AudioRecorder.UpdateRecordingTime();
             CheckRecordingTime();
         }
+
         #endregion MonoBehaviour Callbacks
 
-        
+
         #region Event Functions
+
         public void OnPointerClick(PointerEventData eventData)
         {
             if (holdToRecord) return;
@@ -92,22 +98,18 @@ namespace Mayank.AudioRecorder.Recorder.Handler
         {
             if (holdToRecord) StartCoroutine(StopRecording());
         }
+
         #endregion Event Functions
 
-        
+
         #region Recorder Functions
+
         private static void AuthorizeMicrophone()
         {
-            // Check iOS Microphone permission
-            if (Application.HasUserAuthorization(UserAuthorization.Microphone)) Debug.Log("Microphone found");
-            else
-            {
-                // Debug.Log("Microphone not found");
-                // Request iOS Microphone permission
+            if (!Application.HasUserAuthorization(UserAuthorization.Microphone))
                 Application.RequestUserAuthorization(UserAuthorization.Microphone);
-            }
         }
-        
+
         private void CheckRecordingTime()
         {
             if (Core.AudioRecorder.RecordingTime >= timeToRecord) StartCoroutine(StopRecording());
@@ -120,7 +122,7 @@ namespace Mayank.AudioRecorder.Recorder.Handler
             if (Core.AudioRecorder.IsRecording) StartCoroutine(StopRecording());
             else StartRecording();
         }
-        
+
         private void StartRecording()
         {
             if (!Core.AudioRecorder.MicrophoneIsAvailable()) return;
@@ -132,7 +134,7 @@ namespace Mayank.AudioRecorder.Recorder.Handler
         {
             if (!Core.AudioRecorder.IsRecording) yield break;
             recorderRecorderView.OnStopRecording();
-            FileWritingResultModel writingResult = null; 
+            FileWritingResultModel writingResult = null;
 
             yield return new WaitUntil(() =>
             {
@@ -144,6 +146,7 @@ namespace Mayank.AudioRecorder.Recorder.Handler
                 ? $"Audio saved at {writingResult.result}"
                 : $"Something went wrong while saving audio file \n {writingResult.result}");
         }
+
         #endregion Recorder Functions
     }
 }

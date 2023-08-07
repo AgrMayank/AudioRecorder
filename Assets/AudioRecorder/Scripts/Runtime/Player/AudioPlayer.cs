@@ -37,12 +37,9 @@ namespace Mayank.AudioRecorder.Player
         /// <summary>
         /// Tracks the playback state.
         /// </summary>
-        private bool _isPaused = false;
+        private bool _isPaused;
         
         
-        // ToDo: Check it: what is the following variable doing? Why does it exists?
-        private AudioSource _audioSource;
-
         #region MonoCallbacks
         
         /// <summary>
@@ -50,7 +47,6 @@ namespace Mayank.AudioRecorder.Player
         /// </summary>
         private void Start()
         {
-            _audioSource = GetComponent<AudioSource>();
             _isPaused = false;
             SetPlayPauseImagesStatus(false);
         }
@@ -78,7 +74,7 @@ namespace Mayank.AudioRecorder.Player
         /// </summary>
         private void SetAudioSliderValue()
         {
-            audioSlider.value = _audioSource.time;
+            audioSlider.value = audioSource.time;
         }
 
         /// <summary>

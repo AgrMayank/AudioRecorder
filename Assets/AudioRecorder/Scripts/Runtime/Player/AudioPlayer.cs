@@ -20,12 +20,12 @@ namespace Mayank.AudioRecorder.Player
         [SerializeField] private AudioSource audioSource;
         
         /// <summary>
-        /// This image provides a visual indication to the user that the audio playback can be resumed by pressing the button associated with it.
+        /// Indicates if the audio playback can be resumed.
         /// </summary>
         [SerializeField] private Image playImage;
         
         /// <summary>
-        /// This image provides a visual indication to the user that the audio playback can be paused by pressing the button associated with it.
+        /// Indicates if the audio playback can be paused.
         /// </summary>
         [SerializeField] private Image pauseImage;
         
@@ -56,13 +56,8 @@ namespace Mayank.AudioRecorder.Player
         /// </summary>
         private void Update()
         {
-            // If the audio is currently playing, update the audio slider value.
             if (audioSource.isPlaying) SetAudioSliderValue();
-            
-            // If the audio slider value is within the valid range or the audio is playing, do nothing.
             if ((audioSlider.value <= audioSlider.maxValue && audioSlider.value >= audioSlider.minValue) || audioSource.isPlaying) return;
-            
-            // If the audio is not playing, set the play/pause images to the inactive state and reset the paused state.
             SetPlayPauseImagesStatus(false);
             _isPaused = false;
         }
@@ -88,13 +83,11 @@ namespace Mayank.AudioRecorder.Player
         }
 
         /// <summary>
-        /// Changes the AudioClip of the AudioSource and adjusts the audio slider parameters accordingly.
+        /// Changes the audio clip of the AudioSource and adjusts the audio slider parameters accordingly.
         /// </summary>
         public void UpdateClip()
         {
-            // Set the AudioClip of the AudioSource component to the provided audioClip.
             audioSource.clip = audioClip;
-            // Adjust the audio slider parameters to match the length of the new audio clip.
             audioSlider.direction = Slider.Direction.LeftToRight;
             audioSlider.minValue = 0;
             audioSlider.maxValue = audioSource.clip.length;
@@ -105,20 +98,17 @@ namespace Mayank.AudioRecorder.Player
         /// </summary>
         public void PlayPauseAudio()
         {
-            // If the audio is currently playing, pause the audio playback and set the play/pause images to the inactive state.
             if (audioSource.isPlaying)
             {
                 audioSource.Pause();
                 SetPlayPauseImagesStatus(false);
                 _isPaused = true;
             }
-            // If the audio is currently paused, resume the audio playback and set the play/pause images to the active state.
             else if (_isPaused)
             {
                 SetPlayPauseImagesStatus(true);
                 audioSource.UnPause();
             }
-            // If the audio is not playing, start the audio playback and set the play/pause images to the active state.
             else
             {
                 SetPlayPauseImagesStatus(true);

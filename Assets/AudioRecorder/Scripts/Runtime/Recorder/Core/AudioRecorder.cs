@@ -6,12 +6,21 @@ using UnityEngine;
 
 namespace Mayank.AudioRecorder.Recorder.Core
 {
-    // ToDo: Add comments.
     public static class AudioRecorder
     {
+        /// <summary>
+        /// The total time of the current recording audio.
+        /// </summary>
         public static float RecordingTime { get; private set; }
+        
+        /// <summary>
+        /// Represents if the recorder is recording or not. 
+        /// </summary>
         public static bool IsRecording { get; private set; }
 
+        /// <summary>
+        /// The maximum allowed time of recording.
+        /// </summary>
         private static int _timeToRecord;
         
         /// <summary>
@@ -19,14 +28,19 @@ namespace Mayank.AudioRecorder.Recorder.Core
         /// </summary>
         private const int HeaderSize = 44;
 
-        private static Coroutine _recordingTimeUpdater;
-
-        // ToDo: convert the following method to a asyncronous method
+        /// <summary>
+        /// Updates the total recording time.
+        /// </summary>
+        // ToDo: convert the following method to a asynchronous method
         public static void UpdateRecordingTime()
         {
             RecordingTime += Time.deltaTime;
         }
-
+        
+        /// <summary>
+        /// Checks if any microphone is available.
+        /// </summary>
+        /// <returns>A microphone is available or not.</returns>
         public static bool MicrophoneIsAvailable()
         {
             if (Microphone.devices == null || Microphone.devices.Length == 0)
@@ -39,6 +53,11 @@ namespace Mayank.AudioRecorder.Recorder.Core
             return true;
         }
 
+        /// <summary>
+        /// Starts recording the audio file.
+        /// </summary>
+        /// <param name="audioSource">The intended AudioSource. It records the input audio (via microphone) on its AudioClip.</param>
+        /// <param name="timeToRecord">The maximum allowed time of the audio.</param>
         public static void StartRecording(AudioSource audioSource, int timeToRecord)
         {
             _timeToRecord = timeToRecord;
@@ -48,6 +67,12 @@ namespace Mayank.AudioRecorder.Recorder.Core
             audioSource.clip = Microphone.Start(Microphone.devices[0], false, timeToRecord, 44100);
         }
 
+        /// <summary>
+        /// Saves the recorded audio.
+        /// </summary>
+        /// <param name="audioSource">The AudioSource which includes the recorded audio.</param>
+        /// <param name="fileName">The intended name of the audio file.</param>
+        /// <returns>The result of writing the audio file.</returns>
         public static FileWritingResultModel SaveRecording(AudioSource audioSource, string fileName = "Audio")
         {
             IsRecording = false;
@@ -57,6 +82,12 @@ namespace Mayank.AudioRecorder.Recorder.Core
             return wavWritingResult;
         }
 
+        /// <summary>
+        /// Tries to create audio file.
+        /// </summary>
+        /// <param name="fileName">The intended name of the audio file.</param>
+        /// <param name="audioClip">The recorded audio as an AudioClip.</param>
+        /// <returns>The result of creating the audio file.</returns>
         private static FileWritingResultModel TryCreateAudioFile(string fileName, AudioClip audioClip)
         {
             var filePath = Path.Combine(Application.persistentDataPath,
@@ -90,6 +121,12 @@ namespace Mayank.AudioRecorder.Recorder.Core
             return wavWritingResult;
         }
 
+        /// <summary>
+        /// Creates an AudioClip.
+        /// </summary>
+        /// <param name="audioSource">The intended AudioSource.</param>
+        /// <param name="fileName">The intended name of the AudioClip.</param>
+        /// <returns>The created AudioClip.</returns>
         private static AudioClip CreateAudioClip(AudioSource audioSource, string fileName)
         {
             var samplesData = new float[audioSource.clip.samples * audioSource.clip.channels];

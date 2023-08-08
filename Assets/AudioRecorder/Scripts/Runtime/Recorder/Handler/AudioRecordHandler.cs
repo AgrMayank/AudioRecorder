@@ -2,50 +2,54 @@
 using Mayank.AudioRecorder.Utility;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.Serialization;
 #if UNITY_IOS
 using UnityEngine.iOS;
 #endif
 
 namespace Mayank.AudioRecorder.Recorder.Handler
 {
-    // ToDo: Add comments
-
     /// <summary>
     /// Add this component to a GameObject to Record Mic Input 
     /// </summary>
-    [RequireComponent(typeof(AudioSource))]
     public class AudioRecordHandler : MonoBehaviour, IPointerClickHandler, IPointerDownHandler, IPointerUpHandler
     {
-        #region Static Variables
-
-        // /// <summary>
-        // /// Audio Source to store Microphone Input, An AudioSource Component is required by default
-        // /// </summary>
-        // private static AudioSource audioSource;
-
         /// <summary>
-        /// The samples are floats ranging from -1.0f to 1.0f, representing the data in the audio clip
+        /// An array of floating-point values ranging from -1.0f to 1.0f, representing the audio data in the clip.
         /// </summary>
         private static float[] samplesData;
-
-        #endregion
+        
+        // #region Static Variables
+        //
+        // /// <summary>
+        // /// An array of floating-point values ranging from -1.0f to 1.0f, representing the audio data in the clip.
+        // /// </summary>
+        // private static float[] samplesData;
+        //
+        // #endregion
 
 
         #region Editor Exposed Variables
 
         /// <summary>
-        /// Audio Source to store Microphone Input, An AudioSource Component is required by default
+        /// Audio Source to store Microphone Input.
         /// </summary>
         [Tooltip("Set a AudioSource component to store the microphone input.")]
         [SerializeField] private AudioSource _audioSource;
         
         /// <summary>
-        /// Set a keyboard key for saving the Audio File
+        /// The keyboard key used to start and stop recording the audio file.
         /// </summary>
-        [Tooltip("Set a keyboard key for saving the Audio File")]
-        // public KeyCode keyCode;
+        [Tooltip("Set a keyboard key to start and stop recording the audio file.")]
         [SerializeField] private KeyCode _keyCode;
+        
+        
+        
+        
+        
+        
+        
+        
+        
 
         /// <summary>
         /// Set max duration of the audio file in seconds

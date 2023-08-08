@@ -23,16 +23,10 @@ namespace Mayank.AudioRecorder.Recorder.Core
         /// </summary>
         private static int _timeToRecord;
         
-        
-        
-        
-        
+        /// <summary>
+        /// The name of the audio file; 
+        /// </summary>
         private static string _fileName;
-        
-        
-        
-        
-        
         
         /// <summary>
         /// The size of the WAV file header, in bytes.
@@ -87,18 +81,9 @@ namespace Mayank.AudioRecorder.Recorder.Core
         public static FileWritingResultModel SaveRecording(AudioSource audioSource, string fileName = "Audio")
         {
             _fileName = fileName;
-            
-            
-            
-            
-            
             IsRecording = false;
             Microphone.End(Microphone.devices[0]);
-            // var audioClip = CreateAudioClip(audioSource, fileName);
-            // var audioClip = CreateAudioClip(audioSource, _fileName);
             var audioClip = CreateAudioClip(audioSource);
-            // var wavWritingResult = TryCreateAudioFile(fileName, audioClip);
-            // var wavWritingResult = TryCreateAudioFile(_fileName, audioClip);
             var wavWritingResult = TryCreateAudioFile(audioClip);
             return wavWritingResult;
         }
@@ -109,10 +94,8 @@ namespace Mayank.AudioRecorder.Recorder.Core
         /// <param name="fileName">The intended name of the audio file.</param>
         /// <param name="audioClip">The recorded audio as an AudioClip.</param>
         /// <returns>The result of creating the audio file.</returns>
-        // private static FileWritingResultModel TryCreateAudioFile(string fileName, AudioClip audioClip)
         private static FileWritingResultModel TryCreateAudioFile(AudioClip audioClip)
         {
-            // var filePath = Path.Combine(Application.persistentDataPath, fileName + ".wav");
             var filePath = Path.Combine(Application.persistentDataPath, _fileName + ".wav");
 
             // Delete the file if it exists.
@@ -149,7 +132,6 @@ namespace Mayank.AudioRecorder.Recorder.Core
         /// <param name="audioSource">The AudioSource that includes the recorded audio data.</param>
         /// <param name="fileName">The intended name of the AudioClip.</param>
         /// <returns>The created AudioClip.</returns>
-        // private static AudioClip CreateAudioClip(AudioSource audioSource, string fileName)
         private static AudioClip CreateAudioClip(AudioSource audioSource)
         {
             var samplesData = new float[audioSource.clip.samples * audioSource.clip.channels];
@@ -168,7 +150,6 @@ namespace Mayank.AudioRecorder.Recorder.Core
             // Create the audio file after removing the silence
             var audioClip =
                 AudioClip.Create(_fileName, samplesData.Length, audioSource.clip.channels, 44100, false);
-                // AudioClip.Create(fileName, samplesData.Length, audioSource.clip.channels, 44100, false);
             audioClip.SetData(samplesData, 0);
             return audioClip;
         }

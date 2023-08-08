@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using Cysharp.Threading.Tasks;
 using Mayank.AudioRecorder.Utility;
 using UnityEngine;
@@ -88,7 +87,6 @@ namespace Mayank.AudioRecorder.Recorder.Handler
         public void OnPointerClick(PointerEventData eventData)
         {
             if (_holdToRecord) return;
-            // if (Core.AudioRecorder.IsRecording) StartCoroutine(StopRecording());
             if (Core.AudioRecorder.IsRecording) StopRecording();
             else StartRecording();
         }
@@ -108,7 +106,6 @@ namespace Mayank.AudioRecorder.Recorder.Handler
         /// <param name="eventData">Unused.</param>
         void IPointerUpHandler.OnPointerUp(PointerEventData eventData)
         {
-            // if (_holdToRecord) StartCoroutine(StopRecording());
             if (_holdToRecord) StopRecording();
         }
 
@@ -131,7 +128,6 @@ namespace Mayank.AudioRecorder.Recorder.Handler
         /// </summary>
         private void CheckRecordingTime()
         {
-            // if (Core.AudioRecorder.RecordingTime >= _timeToRecord) StartCoroutine(StopRecording());
             if (Core.AudioRecorder.RecordingTime >= _timeToRecord) StopRecording();
         }
 
@@ -142,7 +138,6 @@ namespace Mayank.AudioRecorder.Recorder.Handler
         {
             if (_holdToRecord) return;
             if (!Input.GetKeyDown(_keyCode)) return;
-            // if (Core.AudioRecorder.IsRecording) StartCoroutine(StopRecording());
             if (Core.AudioRecorder.IsRecording) StopRecording();
             else StartRecording();
         }
@@ -162,28 +157,14 @@ namespace Mayank.AudioRecorder.Recorder.Handler
         /// </summary>
         /// <param name="fileName">The intended name of the recorded audio file.</param>
         /// <returns>An IEnumerator object.</returns>
-        // private IEnumerator StopRecording(string fileName = "Audio")
-        // private async UniTask StopRecording(string fileName = "Audio")
         private async UniTask StopRecording(string fileName = "Audio")
         {
-            // if (!Core.AudioRecorder.IsRecording) yield break;
             if (!Core.AudioRecorder.IsRecording) return;
             _recorderRecorderView.OnStopRecording();
             FileWritingResultModel writingResult = null;
             fileName = fileName + " " + DateTime.UtcNow.ToString("yyyy_MM_dd HH_mm_ss_ffff");
-            
             writingResult = Core.AudioRecorder.SaveRecording(_audioSource, fileName);
-            // return writingResult != null;
-
-
             await UniTask.WaitUntil(() => writingResult != null);
-            
-            // yield return new WaitUntil(() =>
-            // {
-            //     writingResult = Core.AudioRecorder.SaveRecording(_audioSource, fileName);
-            //     return writingResult != null;
-            // });
-
             _recorderRecorderView.OnRecordingSaved(writingResult.status
                 ? $"Audio saved at {writingResult.result}"
                 : $"Something went wrong while saving audio file \n {writingResult.result}");

@@ -5,10 +5,15 @@ using UnityEngine;
 
 namespace Mayank.AudioRecorder.Utility
 {
-    
-    // ToDo: Add comments
     public static class FileWriter
     {
+        
+        /// <summary>
+        /// Writes an AudioClip to a WAV file at the specified path.
+        /// </summary>
+        /// <param name="clip">The AudioClip to be saved.</param>
+        /// <param name="filePath">The path where the WAV file will be saved.</param>
+        /// <param name="headerSize">The size of the header of the WAV file.</param>
         public static void WriteWavFile(AudioClip clip, string filePath, int headerSize)
         {
             var clipData = new float[clip.samples];

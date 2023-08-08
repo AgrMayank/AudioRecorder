@@ -8,27 +8,27 @@ namespace Mayank.AudioRecorder.Recorder.View
     public class DefaultRecorderView : RecorderView
     {
         /// <summary>
-        /// Show the Filepath on the screen, etc 
+        /// Displays logs on the console text.
         /// </summary>
         [SerializeField] private TMP_Text consoleText;
         
         /// <summary>
-        /// Show the Recording Time on the screen
+        /// Displays the recording time on the screen.
         /// </summary>
         [SerializeField] private TMP_Text recordingTimeText;
 
         /// <summary>
-        /// Record Image for the Record Button
+        /// Record Image for the Record Button.
         /// </summary>
         [SerializeField] private Image recordImage;
 
         /// <summary>
-        /// Save Image for the Record Button
+        /// Save Image for the Record Button.
         /// </summary>
         [SerializeField] private Image saveImage;
         
         /// <summary>
-        /// Set a Button to trigger recording or saving the Audio WAV file 
+        /// Button component used to trigger recording or saving of the audio file.
         /// </summary>
         [SerializeField] private Button recordButton;
         
@@ -38,17 +38,18 @@ namespace Mayank.AudioRecorder.Recorder.View
         private Coroutine _timeUpdateRoutine;
 
         /// <summary>
-        /// Recording Time-Minute
+        /// The minutes of recording time.
+        /// Represents the number of minutes in the recording time.
         /// </summary>
         private int _minute = 0;
         
         /// <summary>
-        /// Recording Time-Seconds
+        /// Represents the number of seconds in the recording time.
         /// </summary>
         private int _second = 0;
 
         /// <summary>
-        /// Clears the consoleText.
+        /// Clears the console text by setting it to an empty string.
         /// </summary>
         private void OnEnable()
         {
@@ -56,11 +57,11 @@ namespace Mayank.AudioRecorder.Recorder.View
         }
 
         /// <summary>
-        /// Scales the record button.
+        /// Scales a game object over time using a Lerp function.
         /// </summary>
-        /// <param name="button">Record button.</param>
-        /// <param name="scaleFactor">The amount of changing scale of the record button.</param>
-        /// <returns>IEnumerator object.</returns>
+        /// <param name="button">The game object to scale.</param>
+        /// <param name="scaleFactor">The amount to scale the game object by.</param>
+        /// <returns>An IEnumerator object.</returns>
         private IEnumerator ScaleOverTime(GameObject button, float scaleFactor)
         {
             var originalScale = button.transform.localScale;
@@ -77,9 +78,9 @@ namespace Mayank.AudioRecorder.Recorder.View
         }
         
         /// <summary>
-        /// Updates the recording time.
+        /// Updates the recording time by calculating the number of minutes and seconds elapsed since the start of the recording and displaying the result on the recording time text.
         /// </summary>
-        /// <returns>IEnumerator object.</returns>
+        /// <returns>An IEnumerator object.</returns>
         private IEnumerator UpdateRecordingTime()
         {
             while (Core.AudioRecorder.IsRecording)
@@ -100,7 +101,7 @@ namespace Mayank.AudioRecorder.Recorder.View
         }
 
         /// <summary>
-        /// Calculates minutes and seconds of recording time.
+        /// Calculates the number of minutes and seconds elapsed since the start of the recording time.
         /// </summary>
         private void CalculateMinuteAndSecond()
         {

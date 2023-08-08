@@ -19,10 +19,10 @@ namespace Mayank.AudioRecorder.Recorder.Handler
     {
         #region Static Variables
 
-        /// <summary>
-        /// Audio Source to store Microphone Input, An AudioSource Component is required by default
-        /// </summary>
-        private static AudioSource audioSource;
+        // /// <summary>
+        // /// Audio Source to store Microphone Input, An AudioSource Component is required by default
+        // /// </summary>
+        // private static AudioSource audioSource;
 
         /// <summary>
         /// The samples are floats ranging from -1.0f to 1.0f, representing the data in the audio clip
@@ -35,40 +35,55 @@ namespace Mayank.AudioRecorder.Recorder.Handler
         #region Editor Exposed Variables
 
         /// <summary>
+        /// Audio Source to store Microphone Input, An AudioSource Component is required by default
+        /// </summary>
+        [Tooltip("Set a AudioSource component to store the microphone input.")]
+        [SerializeField] private AudioSource _audioSource;
+        
+        /// <summary>
         /// Set a keyboard key for saving the Audio File
         /// </summary>
         [Tooltip("Set a keyboard key for saving the Audio File")]
-        public KeyCode keyCode;
+        // public KeyCode keyCode;
+        [SerializeField] private KeyCode _keyCode;
 
         /// <summary>
         /// Set max duration of the audio file in seconds
         /// </summary>
         [Tooltip("Set max duration of the audio file in seconds")]
-        public int timeToRecord = 30;
+        [SerializeField] private int _timeToRecord = 30;
+        // public int timeToRecord = 30;
 
         /// <summary>
         /// Hold Button to Record
         /// </summary>
         [Tooltip("Press and Hold Record button to Record")]
-        public bool holdToRecord = false;
+        [SerializeField] private bool _holdToRecord = false;
+        // public bool holdToRecord = false;
 
         /// <summary>
         /// The component that Handles recorder UI
         /// </summary>
-        [FormerlySerializedAs("recorderView")] [Tooltip("AudioRecorderView component for recorder")] [SerializeField]
-        private View.RecorderView recorderRecorderView;
+        [Tooltip("AudioRecorderView component for recorder")] [SerializeField]
+        private View.RecorderView _recorderRecorderView;
 
         #endregion
 
 
         #region MonoBehaviour Callbacks
 
+        /// <summary>
+        /// Authorizes the microphone and 
+        /// </summary>
         private void Start()
         {
             AuthorizeMicrophone();
-            audioSource = GetComponent<AudioSource>();
+            // _audioSource = GetComponent<AudioSource>();
         }
 
+        /// <summary>
+        /// Checks any thing to start or stop recording.
+        /// </summary>
         private void Update()
         {
             CheckRecordKey();
@@ -82,21 +97,34 @@ namespace Mayank.AudioRecorder.Recorder.Handler
 
         #region Event Functions
 
+        /// <summary>
+        /// This method is called when the user clicks on the record button. If the hold-to-record option is enabled, it does nothing.
+        /// If the audio recorder is currently recording, it stops the recording. Otherwise, it starts the recording.
+        /// </summary>
+        /// <param name="eventData">The data of the event. It's useless in this function.</param>
         public void OnPointerClick(PointerEventData eventData)
         {
-            if (holdToRecord) return;
+            if (_holdToRecord) return;
             if (Core.AudioRecorder.IsRecording) StartCoroutine(StopRecording());
             else StartRecording();
         }
 
+        /// <summary>
+        /// It starts recording if _holdToRecord is true.
+        /// </summary>
+        /// <param name="eventData">The data of the event. It's useless in this function.</param>
         public void OnPointerDown(PointerEventData eventData)
         {
-            if (holdToRecord) StartRecording();
+            if (_holdToRecord) StartRecording();
         }
 
+        /// <summary>
+        /// It stops recording, if _hodToRecord is true.
+        /// </summary>
+        /// <param name="eventData">The data of the event. It's useless in this function.</param>
         void IPointerUpHandler.OnPointerUp(PointerEventData eventData)
         {
-            if (holdToRecord) StartCoroutine(StopRecording());
+            if (_holdToRecord) StartCoroutine(StopRecording());
         }
 
         #endregion Event Functions
@@ -104,45 +132,62 @@ namespace Mayank.AudioRecorder.Recorder.Handler
 
         #region Recorder Functions
 
+        /// <summary>
+        /// Authorizes the microphone.
+        /// </summary>
         private static void AuthorizeMicrophone()
         {
             if (!Application.HasUserAuthorization(UserAuthorization.Microphone))
                 Application.RequestUserAuthorization(UserAuthorization.Microphone);
         }
 
+        /// <summary>
+        /// Stops recording if its duration be bigger than the maximum time of the recording.
+        /// </summary>
         private void CheckRecordingTime()
         {
-            if (Core.AudioRecorder.RecordingTime >= timeToRecord) StartCoroutine(StopRecording());
+            if (Core.AudioRecorder.RecordingTime >= _timeToRecord) StartCoroutine(StopRecording());
         }
 
+        /// <summary>
+        /// Starts or stop recording if _holdToRecord is false and the keyCode be gotten.
+        /// </summary>
         private void CheckRecordKey()
         {
-            if (holdToRecord) return;
-            if (!Input.GetKeyDown(keyCode)) return;
+            if (_holdToRecord) return;
+            if (!Input.GetKeyDown(_keyCode)) return;
             if (Core.AudioRecorder.IsRecording) StartCoroutine(StopRecording());
             else StartRecording();
         }
 
+        /// <summary>
+        /// Starts recording.
+        /// </summary>
         private void StartRecording()
         {
             if (!Core.AudioRecorder.MicrophoneIsAvailable()) return;
-            Core.AudioRecorder.StartRecording(audioSource, timeToRecord);
-            recorderRecorderView.OnStartRecording();
+            Core.AudioRecorder.StartRecording(_audioSource, _timeToRecord);
+            _recorderRecorderView.OnStartRecording();
         }
 
+        /// <summary>
+        /// Stops recording.
+        /// </summary>
+        /// <param name="fileName">The intended name of the recorded audio file.</param>
+        /// <returns>IEnumerator</returns>
         private IEnumerator StopRecording(string fileName = "Audio")
         {
             if (!Core.AudioRecorder.IsRecording) yield break;
-            recorderRecorderView.OnStopRecording();
+            _recorderRecorderView.OnStopRecording();
             FileWritingResultModel writingResult = null;
 
             yield return new WaitUntil(() =>
             {
-                writingResult = Core.AudioRecorder.SaveRecording(audioSource, fileName);
+                writingResult = Core.AudioRecorder.SaveRecording(_audioSource, fileName);
                 return writingResult != null;
             });
 
-            recorderRecorderView.OnRecordingSaved(writingResult.status
+            _recorderRecorderView.OnRecordingSaved(writingResult.status
                 ? $"Audio saved at {writingResult.result}"
                 : $"Something went wrong while saving audio file \n {writingResult.result}");
         }

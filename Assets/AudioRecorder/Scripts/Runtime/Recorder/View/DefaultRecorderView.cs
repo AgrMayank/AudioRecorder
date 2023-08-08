@@ -110,7 +110,7 @@ namespace Mayank.AudioRecorder.Recorder.View
         }
 
         /// <summary>
-        /// It will be called after recording has been started.
+        /// Called when the recording process is started.
         /// </summary>
         public override void OnStartRecording()
         {
@@ -122,7 +122,7 @@ namespace Mayank.AudioRecorder.Recorder.View
         }
 
         /// <summary>
-        /// It will be called after recording has been stopped.
+        /// Called when the recording process is stopped.
         /// </summary>
         public override void OnStopRecording()
         {
@@ -134,8 +134,9 @@ namespace Mayank.AudioRecorder.Recorder.View
         }
         
         /// <summary>
-        /// It will be called after recording has been saved.
+        /// Called when the recording process is saved.
         /// </summary>
+        /// <param name="message">The message to display on the console text.</param>
         public override void OnRecordingSaved(string message) => consoleText.text = message;
     }
 }

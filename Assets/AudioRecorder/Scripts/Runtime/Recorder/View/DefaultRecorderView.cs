@@ -5,8 +5,6 @@ using UnityEngine.UI;
 
 namespace Mayank.AudioRecorder.Recorder.View
 {
-    // ToDo: Add comments
-    
     public class DefaultRecorderView : RecorderView
     {
         /// <summary>
@@ -49,11 +47,20 @@ namespace Mayank.AudioRecorder.Recorder.View
         /// </summary>
         private int _second = 0;
 
+        /// <summary>
+        /// Clears the consoleText.
+        /// </summary>
         private void OnEnable()
         {
             consoleText.text = "";
         }
 
+        /// <summary>
+        /// Scales the record button.
+        /// </summary>
+        /// <param name="button">Record button.</param>
+        /// <param name="scaleFactor">The amount of changing scale of the record button.</param>
+        /// <returns>IEnumerator object.</returns>
         private IEnumerator ScaleOverTime(GameObject button, float scaleFactor)
         {
             var originalScale = button.transform.localScale;
@@ -69,6 +76,10 @@ namespace Mayank.AudioRecorder.Recorder.View
             while (currentTime <= 1f);
         }
         
+        /// <summary>
+        /// Updates the recording time.
+        /// </summary>
+        /// <returns>IEnumerator object.</returns>
         private IEnumerator UpdateRecordingTime()
         {
             while (Core.AudioRecorder.IsRecording)
@@ -88,12 +99,18 @@ namespace Mayank.AudioRecorder.Recorder.View
             }
         }
 
+        /// <summary>
+        /// Calculates minutes and seconds of recording time.
+        /// </summary>
         private void CalculateMinuteAndSecond()
         {
             _minute = (int)(Core.AudioRecorder.RecordingTime / 60);
             _second = (int)(Core.AudioRecorder.RecordingTime % 60);
         }
 
+        /// <summary>
+        /// It will be called after recording has been started.
+        /// </summary>
         public override void OnStartRecording()
         {
             StartCoroutine(ScaleOverTime(recordButton.gameObject, 1.2f));
@@ -103,6 +120,9 @@ namespace Mayank.AudioRecorder.Recorder.View
             _timeUpdateRoutine = StartCoroutine(nameof(UpdateRecordingTime));
         }
 
+        /// <summary>
+        /// It will be called after recording has been stopped.
+        /// </summary>
         public override void OnStopRecording()
         {
             StartCoroutine(ScaleOverTime(recordButton.gameObject, 1f));
@@ -112,6 +132,9 @@ namespace Mayank.AudioRecorder.Recorder.View
             StopCoroutine(_timeUpdateRoutine);
         }
         
+        /// <summary>
+        /// It will be called after recording has been saved.
+        /// </summary>
         public override void OnRecordingSaved(string message) => consoleText.text = message;
     }
 }

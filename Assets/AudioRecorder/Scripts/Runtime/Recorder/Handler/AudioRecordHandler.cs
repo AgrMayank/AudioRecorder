@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using Mayank.AudioRecorder.Utility;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -161,7 +162,8 @@ namespace Mayank.AudioRecorder.Recorder.Handler
             if (!Core.AudioRecorder.IsRecording) yield break;
             _recorderRecorderView.OnStopRecording();
             FileWritingResultModel writingResult = null;
-
+            fileName = fileName + " " + DateTime.UtcNow.ToString("yyyy_MM_dd HH_mm_ss_ffff");
+            
             yield return new WaitUntil(() =>
             {
                 writingResult = Core.AudioRecorder.SaveRecording(_audioSource, fileName);

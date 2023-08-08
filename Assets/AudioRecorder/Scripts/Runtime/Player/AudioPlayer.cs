@@ -3,10 +3,9 @@ using UnityEngine.UI;
 
 namespace Mayank.AudioRecorder.Player
 {
-    
-    // ToDo: Load last audio file.
-    
-    // This class controls the audio playback and slider UI.
+    /// <summary>
+    /// This class controls the audio playback and slider UI.
+    /// </summary>
     public class AudioPlayer : MonoBehaviour
     {
         /// <summary>

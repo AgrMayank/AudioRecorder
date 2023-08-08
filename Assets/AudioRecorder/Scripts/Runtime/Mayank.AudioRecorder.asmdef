@@ -2,7 +2,8 @@
     "name": "Mayank.AudioRecorder",
     "rootNamespace": "Mayank.AudioRecorder",
     "references": [
-        "Unity.TextMeshPro"
+        "Unity.TextMeshPro",
+        "UniTask"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

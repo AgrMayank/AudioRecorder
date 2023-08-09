@@ -21,7 +21,6 @@ namespace Mayank.AudioRecorder.Recorder.View
         /// <summary>
         /// Record image for the record button.
         /// </summary>
-        // [SerializeField] private Sprite recordSprite;
         [SerializeField] private Image recordImage;
 
         /// <summary>

@@ -3,6 +3,7 @@ using Cysharp.Threading.Tasks;
 using Mayank.AudioRecorder.Utility;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.Serialization;
 #if UNITY_IOS
 using UnityEngine.iOS;
 #endif
@@ -48,8 +49,10 @@ namespace Mayank.AudioRecorder.Recorder.Handler
         /// <summary>
         /// The component responsible for handling the recorder UI.
         /// </summary>
+        // [FormerlySerializedAs("_recorderRecorderView")]
         [Tooltip("The RecorderView component used for the recorder.")]
-        [SerializeField] private View.RecorderView _recorderRecorderView;
+        [SerializeField] private View.RecorderView _recorderView;
+        // [SerializeField] private View.RecorderView _recorderRecorderView;
 
         #endregion
 
@@ -149,23 +152,22 @@ namespace Mayank.AudioRecorder.Recorder.Handler
         {
             if (!Core.AudioRecorder.MicrophoneIsAvailable()) return;
             Core.AudioRecorder.StartRecording(_audioSource, _timeToRecord);
-            _recorderRecorderView.OnStartRecording();
+            _recorderView.OnStartRecording();
         }
 
         /// <summary>
         /// Stops recording audio and saves the recorded audio file to disk.
         /// </summary>
         /// <param name="fileName">The intended name of the recorded audio file.</param>
-        /// <returns>An IEnumerator object.</returns>
         private async UniTask StopRecording(string fileName = "Audio")
         {
             if (!Core.AudioRecorder.IsRecording) return;
-            _recorderRecorderView.OnStopRecording();
+            _recorderView.OnStopRecording();
             FileWritingResultModel writingResult = null;
             fileName = fileName + " " + DateTime.UtcNow.ToString("yyyy_MM_dd HH_mm_ss_ffff");
             writingResult = Core.AudioRecorder.SaveRecording(_audioSource, fileName);
             await UniTask.WaitUntil(() => writingResult != null);
-            _recorderRecorderView.OnRecordingSaved(writingResult.status
+            _recorderView.OnRecordingSaved(writingResult.status
                 ? $"Audio saved at {writingResult.result}"
                 : $"Something went wrong while saving audio file \n {writingResult.result}");
         }

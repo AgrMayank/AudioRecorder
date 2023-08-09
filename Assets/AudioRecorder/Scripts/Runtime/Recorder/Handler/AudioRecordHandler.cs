@@ -3,7 +3,6 @@ using Cysharp.Threading.Tasks;
 using Mayank.AudioRecorder.Utility;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.Serialization;
 #if UNITY_IOS
 using UnityEngine.iOS;
 #endif

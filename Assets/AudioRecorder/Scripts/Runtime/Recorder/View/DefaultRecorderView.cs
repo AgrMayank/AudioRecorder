@@ -62,8 +62,6 @@ namespace Mayank.AudioRecorder.Recorder.View
         /// </summary>
         /// <param name="button">The game object to scale.</param>
         /// <param name="scaleFactor">The amount to scale the game object by.</param>
-        /// <returns>An IEnumerator object.</returns>
-        // private IEnumerator ScaleOverTime(GameObject button, float scaleFactor)
         private async UniTask ScaleOverTime(GameObject button, float scaleFactor)
         {
             var originalScale = button.transform.localScale;
@@ -74,8 +72,6 @@ namespace Mayank.AudioRecorder.Recorder.View
             {
                 button.transform.localScale = Vector3.Lerp(originalScale, destinationScale, currentTime / 0.5f);
                 currentTime += Time.deltaTime;
-                // yield return null;
-                // await UniTask.Delay(100);
                 await UniTask.Delay(1);
             }
             while (currentTime <= 1f);
@@ -118,7 +114,6 @@ namespace Mayank.AudioRecorder.Recorder.View
         /// </summary>
         public override void OnStartRecording()
         {
-            // StartCoroutine(ScaleOverTime(recordButton.gameObject, 1.2f));
             ScaleOverTime(recordButton.gameObject, 1.2f);
             recordingTimeText.text = "00:00";
             recordImage.gameObject.SetActive(true);
@@ -131,7 +126,6 @@ namespace Mayank.AudioRecorder.Recorder.View
         /// </summary>
         public override void OnStopRecording()
         {
-            // StartCoroutine(ScaleOverTime(recordButton.gameObject, 1f));
             ScaleOverTime(recordButton.gameObject, 1f);
             recordingTimeText.text = "00:00";
             recordImage.gameObject.SetActive(true);

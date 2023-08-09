@@ -91,7 +91,6 @@ namespace Mayank.AudioRecorder.Recorder.Core
         /// <summary>
         /// Tries to create a WAV file from the recorded audio.
         /// </summary>
-        /// <param name="fileName">The intended name of the audio file.</param>
         /// <param name="audioClip">The recorded audio as an AudioClip.</param>
         /// <returns>The result of creating the audio file.</returns>
         private static FileWritingResultModel TryCreateAudioFile(AudioClip audioClip)
@@ -130,7 +129,6 @@ namespace Mayank.AudioRecorder.Recorder.Core
         /// Creates an AudioClip from the recorded audio data and trims the silence at the end of the recording.
         /// </summary>
         /// <param name="audioSource">The AudioSource that includes the recorded audio data.</param>
-        /// <param name="fileName">The intended name of the AudioClip.</param>
         /// <returns>The created AudioClip.</returns>
         private static AudioClip CreateAudioClip(AudioSource audioSource)
         {

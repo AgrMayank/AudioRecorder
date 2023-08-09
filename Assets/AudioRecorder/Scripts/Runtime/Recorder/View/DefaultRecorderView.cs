@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using Cysharp.Threading.Tasks;
 using TMPro;
@@ -33,10 +34,10 @@ namespace Mayank.AudioRecorder.Recorder.View
         /// </summary>
         [SerializeField] private Button recordButton;
         
-        /// <summary>
-        /// The coroutine that updates time text.
-        /// </summary>
-        private Coroutine _timeUpdateRoutine;
+        // /// <summary>
+        // /// The coroutine that updates time text.
+        // /// </summary>
+        // private Coroutine _timeUpdateRoutine;
 
         /// <summary>
         /// The minutes of recording time.
@@ -81,7 +82,8 @@ namespace Mayank.AudioRecorder.Recorder.View
         /// Updates the recording time by calculating the number of minutes and seconds elapsed since the start of the recording and displaying the result on the recording time text.
         /// </summary>
         /// <returns>An IEnumerator object.</returns>
-        private IEnumerator UpdateRecordingTime()
+        // private IEnumerator UpdateRecordingTime()
+        private async UniTask UpdateRecordingTime()
         {
             while (Core.AudioRecorder.IsRecording)
             {
@@ -96,7 +98,9 @@ namespace Mayank.AudioRecorder.Recorder.View
                 else if (_second < 10) recordingTimeText.text = _minute + ":0" + _second;
                 else recordingTimeText.text = _minute + ":" + _second;
         
-                yield return new WaitForSeconds(1);
+                // yield return new WaitForSeconds(1);
+
+                await UniTask.Delay(TimeSpan.FromSeconds(1));
             }
         }
 
@@ -118,7 +122,9 @@ namespace Mayank.AudioRecorder.Recorder.View
             recordingTimeText.text = "00:00";
             recordImage.gameObject.SetActive(true);
             saveImage.gameObject.SetActive(false);
-            _timeUpdateRoutine = StartCoroutine(nameof(UpdateRecordingTime));
+            // _timeUpdateRoutine = StartCoroutine(nameof(UpdateRecordingTime));
+            // _timeUpdateRoutine = UpdateRecordingTime();
+            UpdateRecordingTime();
         }
 
         /// <summary>
@@ -130,7 +136,7 @@ namespace Mayank.AudioRecorder.Recorder.View
             recordingTimeText.text = "00:00";
             recordImage.gameObject.SetActive(true);
             saveImage.gameObject.SetActive(false);
-            StopCoroutine(_timeUpdateRoutine);
+            // StopCoroutine(_timeUpdateRoutine);
         }
         
         /// <summary>

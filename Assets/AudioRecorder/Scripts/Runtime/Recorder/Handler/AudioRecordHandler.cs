@@ -1,6 +1,7 @@
 ﻿using System;
 using Cysharp.Threading.Tasks;
 using Mayank.AudioRecorder.Utility;
+using Mayank.AudioRecorder.Utility.Result;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
@@ -49,20 +50,15 @@ namespace Mayank.AudioRecorder.Recorder.Handler
         /// <summary>
         /// The component responsible for handling the recorder UI.
         /// </summary>
-        // [FormerlySerializedAs("_recorderRecorderView")]
         [Tooltip("The RecorderView component used for the recorder.")]
         [SerializeField] private View.RecorderView _recorderView;
-        // [SerializeField] private View.RecorderView _recorderRecorderView;
-        
-        
-        
-        
-        
-        
 
         #endregion
-
-
+        
+        /// <summary>
+        /// An event that gets triggered when an audio file is saved, allowing you to respond with custom actions.
+        /// </summary>
+        [Tooltip("The event that gets triggered when an audio file is saved.")]
         public UnityEvent onAudioFileSaved;
 
 
@@ -168,49 +164,28 @@ namespace Mayank.AudioRecorder.Recorder.Handler
         /// Stops recording audio and saves the recorded audio file to disk.
         /// </summary>
         /// <param name="fileName">The intended name of the recorded audio file.</param>
-        // private async UniTask StopRecording(string fileName = "Audio")
         private async UniTask StopRecording(string fileName = "Audio")
         {
             if (!Core.AudioRecorder.IsRecording) return;
             _recorderView.OnStopRecording();
             FileWritingResultModel writingResult = null;
             fileName = fileName + " " + DateTime.UtcNow.ToString("yyyy_MM_dd HH_mm_ss_ffff");
-            
-            
-            
-            
-            // writingResult = Core.AudioRecorder.SaveRecording(_audioSource, fileName);
-            // writingResult = Core.AudioRecorder.SaveRecording(_audioSource, Application.persistentDataPath, fileName);
             writingResult = await Core.AudioRecorder.SaveRecording(_audioSource, Application.persistentDataPath, fileName);
-            
-            
-            
-            
-            
-            // await UniTask.WaitUntil(() => writingResult != null);
             await UniTask.WaitUntil(() => writingResult.result != null);
-
-
-
             OnAudioFileSaved();
-            
-            
             _recorderView.OnRecordingSaved(writingResult.status
                 ? $"Audio saved at {writingResult.result}"
                 : $"Something went wrong while saving audio file \n {writingResult.result}");
         }
 
-        
-        
-        
-        
-        
+        /// <summary>
+        /// Called when the audio file is saved.
+        /// </summary>
         private void OnAudioFileSaved()
         {
             onAudioFileSaved?.Invoke();
         }
         
-
         #endregion Recorder Functions
     }
 }

@@ -15,12 +15,8 @@ namespace Mayank.AudioRecorder.Utility
         /// <param name="clip">The AudioClip to be saved.</param>
         /// <param name="filePath">The path where the WAV file will be saved.</param>
         /// <param name="headerSize">The size of the header of the WAV file.</param>
-        // public static void WriteWavFile(AudioClip clip, string filePath, int headerSize)
         public static async void WriteWavFile(AudioClip clip, string filePath, int headerSize)
         {
-            
-            
-            
             var clipData = new float[clip.samples];
 
             //Create the file.
@@ -37,7 +33,6 @@ namespace Mayank.AudioRecorder.Utility
             fs.Write(riff, 0, 4);
 
             // ChunkSize
-            // byte[] chunkSize = BitConverter.GetBytes((HEADER_SIZE + clipData.Length) - 8);
             var chunkSize = BitConverter.GetBytes((headerSize + clipData.Length) - 8);
             fs.Write(chunkSize, 0, 4);
 
@@ -102,7 +97,6 @@ namespace Mayank.AudioRecorder.Utility
                 byteArr.CopyTo(bytesData, i * 2);
             }
 
-            // fs.Write(bytesData, 0, bytesData.Length);
             await fs.WriteAsync(bytesData, 0, bytesData.Length);
             fs.Close();
         }

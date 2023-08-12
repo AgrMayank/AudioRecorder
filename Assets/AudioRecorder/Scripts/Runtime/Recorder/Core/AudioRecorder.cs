@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using Cysharp.Threading.Tasks;
 using Mayank.AudioRecorder.Utility;
+using Mayank.AudioRecorder.Utility.Result;
 using UnityEngine;
 
 namespace Mayank.AudioRecorder.Recorder.Core
@@ -28,21 +29,11 @@ namespace Mayank.AudioRecorder.Recorder.Core
         /// The name of the audio file; 
         /// </summary>
         public static string saveFileName { get; private set; }
-        // private static string _fileName;
-        
-        
-        
-        
         
         /// <summary>
         /// The path of the directory which the audio file will be saved at.
         /// </summary>
         public static string saveDirectoryPath { get; private set; }
-        // private static string _saveDirectoryPath;
-        
-        
-        
-        
         
         /// <summary>
         /// The size of the WAV file header, in bytes.
@@ -94,19 +85,13 @@ namespace Mayank.AudioRecorder.Recorder.Core
         /// <param name="audioSource">The AudioSource containing the recorded audio.</param>
         /// <param name="fileName">The name of the audio file to save.</param>
         /// <returns>The result of writing the audio file.</returns>
-        // public static FileWritingResultModel SaveRecording(AudioSource audioSource, string fileName = "Audio")
-        // public static FileWritingResultModel SaveRecording(AudioSource audioSource, string directoryPath = "", string fileName = "Audio")
-        // public static FileWritingResultModel SaveRecording(AudioSource audioSource, string directoryPath, string fileName = "Audio")
         public static async UniTask<FileWritingResultModel> SaveRecording(AudioSource audioSource, string directoryPath, string fileName = "Audio")
         {
             saveDirectoryPath = directoryPath;
-            // sdfsdf
-            // _fileName = fileName;
             saveFileName = fileName;
             IsRecording = false;
             Microphone.End(Microphone.devices[0]);
             var audioClip = CreateAudioClip(audioSource);
-            // var wavWritingResult = TryCreateAudioFile(audioClip);
             var wavWritingResult = await TryCreateAudioFile(audioClip);
             return wavWritingResult;
         }
@@ -116,14 +101,8 @@ namespace Mayank.AudioRecorder.Recorder.Core
         /// </summary>
         /// <param name="audioClip">The recorded audio as an AudioClip.</param>
         /// <returns>The result of creating the audio file.</returns>
-        // private static FileWritingResultModel TryCreateAudioFile(AudioClip audioClip)
         private static async UniTask<FileWritingResultModel> TryCreateAudioFile(AudioClip audioClip)
         {
-            // var filePath = Path.Combine(Application.persistentDataPath, saveFileName + ".wav");
-
-
-            Debug.Log(Path.Combine(saveDirectoryPath, saveFileName + ".wav"));
-            
             var filePath = Path.Combine(saveDirectoryPath, saveFileName + ".wav");
 
             // Delete the file if it exists.
@@ -153,7 +132,6 @@ namespace Mayank.AudioRecorder.Recorder.Core
             }
 
             await UniTask.WaitUntil(() => wavWritingResult.result != null);
-
             return wavWritingResult;
         }
 

@@ -2,7 +2,6 @@
 using Mayank.AudioRecorder.Utility;
 using UnityEngine;
 using UnityEngine.UI;
-// using AudioRecorder = Mayank.AudioRecorder.Recorder.Core.AudioRecorder;
 
 namespace Mayank.AudioRecorder.Player
 {
@@ -118,26 +117,25 @@ namespace Mayank.AudioRecorder.Player
             }
         }
 
-
-
-
-
-
-
-        // public void SetAudioFile()
+        /// <summary>
+        /// Sets the last recorded audio file to the audio clip of the audio source.
+        /// </summary>
         public async void SetAudioFile()
         {
-            Debug.Log("public void SetAudioFile()            public void SetAudioFile()");
+            // var audioClip = await FileReader.LoadWavFileAsAudioClip(Path.Combine(Recorder.Core.AudioRecorder.saveDirectoryPath, Recorder.Core.AudioRecorder.saveFileName + ".wav"));
+            var audioClipFileReadingResultModel = await FileReader.LoadWavFileAsAudioClip(Path.Combine(Recorder.Core.AudioRecorder.saveDirectoryPath, Recorder.Core.AudioRecorder.saveFileName + ".wav"));
+            // audioSource.clip = audioClip;
+
+            // audioSource.clip = audioClipFileReadingResultModel.result;
+
+            audioClip = audioClipFileReadingResultModel.result;
+            UpdateClip();
             
-            var audioClip = await FileReader.LoadWavFileAsAudioClip(Path.Combine(Recorder.Core.AudioRecorder.saveDirectoryPath, Recorder.Core.AudioRecorder.saveFileName + ".wav"));
-            // var audioClip = await FileReader.LoadAudioClip(Path.Combine(Recorder.Core.AudioRecorder.saveDirectoryPath, Recorder.Core.AudioRecorder.saveFileName + ".wav"));
-            // var audioClip = FileReader.LoadAudioClip(Path.Combine(Recorder.Core.AudioRecorder.saveDirectoryPath, Recorder.Core.AudioRecorder.saveFileName + ".wav"));
-            // var audioClip = FileReader.LoadAudioClip(Path.Combine(Recorder.Core.AudioRecorder.saveDirectoryPath, Recorder.Core.AudioRecorder.saveFileName));
-            // FileReader.LoadAudioClip(Path.Combine(AudioRecorder.saveDirectoryPath, Recorder.Core.AudioRecorder.saveFileName));
-
-            Debug.Log("audioClip is loaded . . . ");
-
-            audioSource.clip = audioClip;
+            
+            // if (!audioClipFileReadingResultModel.status)
+            // {
+            //     consoleTe
+            // }
 
         }
     }

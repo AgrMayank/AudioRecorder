@@ -1,5 +1,6 @@
 using System.IO;
 using Cysharp.Threading.Tasks;
+using Mayank.AudioRecorder.Utility.Result;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -7,19 +8,8 @@ namespace Mayank.AudioRecorder.Utility
 {
     public static class FileReader
     {
-        // public static void LoadFile(string filePath)
-        // public static byte[] LoadFile(string filePath)
         public static async UniTask<byte[]> LoadFile(string filePath)
         {
-            // FileStream fileStream = File.OpenRead(filePath);
-            // fileStream.Read();
-
-            
-            
-            
-            // var fileBytes = File.ReadAllBytes(filePath);
-
-
             if (File.Exists(filePath))
             {
                 Debug.Log("file exists at "+filePath);
@@ -80,12 +70,33 @@ namespace Mayank.AudioRecorder.Utility
 
 
 
-        public static async UniTask<AudioClip> LoadWavFileAsAudioClip(string filePath)
+        // public static async UniTask<AudioClip> LoadWavFileAsAudioClip(string filePath)
+        public static async UniTask<AudioClipFileReadingResultModel> LoadWavFileAsAudioClip(string filePath)
         {
             var multimediaWebRequest = UnityWebRequestMultimedia.GetAudioClip(filePath, AudioType.WAV);
             await multimediaWebRequest.SendWebRequest();
             await UniTask.WaitUntil(() => multimediaWebRequest.isDone);
-            return multimediaWebRequest.error != null ? null : DownloadHandlerAudioClip.GetContent((multimediaWebRequest));
+            // return multimediaWebRequest.error != null ? null : DownloadHandlerAudioClip.GetContent((multimediaWebRequest));
+            // return multimediaWebRequest.error != null ? null : DownloadHandlerAudioClip.GetContent((multimediaWebRequest));
+
+            AudioClipFileReadingResultModel audioClipFileReadingResultModel = new AudioClipFileReadingResultModel();
+
+            if (multimediaWebRequest.error != null)
+            {
+                audioClipFileReadingResultModel.status = false;
+                audioClipFileReadingResultModel.error = multimediaWebRequest.error;
+                audioClipFileReadingResultModel.result = null;
+            }
+            else
+            {
+                audioClipFileReadingResultModel.status = true;
+                audioClipFileReadingResultModel.error = null;
+                audioClipFileReadingResultModel.result = DownloadHandlerAudioClip.GetContent(multimediaWebRequest);
+            }
+
+            return audioClipFileReadingResultModel;
+
+
         }
         
         

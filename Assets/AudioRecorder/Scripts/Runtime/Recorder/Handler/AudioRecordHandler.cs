@@ -78,7 +78,6 @@ namespace Mayank.AudioRecorder.Recorder.Handler
         {
             CheckRecordKey();
             if (!Core.AudioRecorder.IsRecording) return;
-            Core.AudioRecorder.UpdateRecordingTime();
             CheckRecordingTime();
         }
 

@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using Cysharp.Threading.Tasks;
 using Mayank.AudioRecorder.Utility;
 using UnityEngine;
@@ -65,7 +66,7 @@ namespace Mayank.AudioRecorder.Player
                 await UniTask.DelayFrame(1);
             }
             
-            audioSource.Stop();
+            if (Math.Abs(audioSource.clip.length - audioSource.time) < 0.5f) audioSource.Stop();
             SetAudioSliderValue();
             SetPlayPauseImagesStatus(false);
             _isPaused = false;

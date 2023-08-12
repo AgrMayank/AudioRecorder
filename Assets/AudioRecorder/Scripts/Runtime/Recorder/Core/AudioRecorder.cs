@@ -43,10 +43,13 @@ namespace Mayank.AudioRecorder.Recorder.Core
         /// <summary>
         /// Updates the total recording time by adding the time elapsed since the last update.
         /// </summary>
-        // ToDo: convert the following method to a asynchronous method
-        public static void UpdateRecordingTime()
+        private static async void UpdateRecordingTime()
         {
-            RecordingTime += Time.deltaTime;
+            while (IsRecording)
+            {
+                RecordingTime += 1;
+                await UniTask.Delay(1000);
+            }
         }
         
         /// <summary>
@@ -77,6 +80,7 @@ namespace Mayank.AudioRecorder.Recorder.Core
             IsRecording = true;
             Microphone.End(Microphone.devices[0]);
             audioSource.clip = Microphone.Start(Microphone.devices[0], false, timeToRecord, 44100);
+            UpdateRecordingTime();
         }
 
         /// <summary>
@@ -111,7 +115,6 @@ namespace Mayank.AudioRecorder.Recorder.Core
 
             try
             {
-                // FileWriter.WriteWavFile(audioClip, filePath, HeaderSize);
                 FileWriter.WriteWavFile(audioClip, filePath, HeaderSize);
 
                 wavWritingResult = new FileWritingResultModel()

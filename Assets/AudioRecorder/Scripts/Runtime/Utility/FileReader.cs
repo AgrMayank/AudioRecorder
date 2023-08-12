@@ -12,74 +12,32 @@ namespace Mayank.AudioRecorder.Utility
         {
             if (File.Exists(filePath))
             {
-                Debug.Log("file exists at "+filePath);
+                Debug.unityLogger.Log("file exists at "+filePath);
             }
             else
             {
-                Debug.Log("file does not exist at "+filePath);
+                Debug.unityLogger.LogError("File loading","file does not exist at "+filePath);
                 return null;
             }
-            
-            
 
             var fileBytes = await File.ReadAllBytesAsync(filePath);
-            
-
             return fileBytes;
-
-
-
-            // AudioClip audioClip = AudioClip.Create("LoadedAudi", fileBytes.Length, 1, 44100, false);
-
-
         }
 
 
-        // public static AudioClip LoadAudioClip(string filePath)
         public static async UniTask<AudioClip> LoadAudioClip(string filePath)
         {
-            
-            Debug.Log("public static AudioClip LoadAudioClip(string filePath)       public static AudioClip LoadAudioClip(string filePath)");
-            
-            // var fileBytes = await LoadFile(filePath);
-            // var fileBytes = LoadWavFile(filePath);
             var fileBytes = await LoadWavFile(filePath);
-            
-            Debug.Log("fileBytes.Length    ::::    "+fileBytes.Length);
-            
-            
             AudioClip audioClip = AudioClip.Create("LoadedAudio", fileBytes.Length, 1, 44100, false);
-
-            
-            Debug.Log("audioClip.length      :::   "+audioClip.length);
-            
-
             return audioClip;
-            
-            
-            
-            
-            
-            
-            
-            
-            
         }
 
-
-
-
-
-        // public static async UniTask<AudioClip> LoadWavFileAsAudioClip(string filePath)
         public static async UniTask<AudioClipFileReadingResultModel> LoadWavFileAsAudioClip(string filePath)
         {
             var multimediaWebRequest = UnityWebRequestMultimedia.GetAudioClip(filePath, AudioType.WAV);
             await multimediaWebRequest.SendWebRequest();
             await UniTask.WaitUntil(() => multimediaWebRequest.isDone);
-            // return multimediaWebRequest.error != null ? null : DownloadHandlerAudioClip.GetContent((multimediaWebRequest));
-            // return multimediaWebRequest.error != null ? null : DownloadHandlerAudioClip.GetContent((multimediaWebRequest));
-
-            AudioClipFileReadingResultModel audioClipFileReadingResultModel = new AudioClipFileReadingResultModel();
+            var audioClipFileReadingResultModel = new AudioClipFileReadingResultModel();
 
             if (multimediaWebRequest.error != null)
             {
@@ -95,40 +53,15 @@ namespace Mayank.AudioRecorder.Utility
             }
 
             return audioClipFileReadingResultModel;
-
-
         }
         
-        
-        
-
-
-        // public static byte[] LoadWavFile(string filePath)
         public static async UniTask<byte[]> LoadWavFile(string filePath)
         {
-            // var bytes = new byte[audioSourceSamples + headerSize];
-
-            // byte[] bytes = new byte[];
-            
             var fs = File.OpenRead(filePath);
-            
             var bytes = new byte[fs.Length];
-            
-            // fs.Read(bytes, 0, bytes.Length);
             var result = await fs.ReadAsync(bytes, 0, bytes.Length);
             return bytes;
-            // return result;
         }
-        
-        
-        
-        
-        // public 
-        
-        
-        
-        
-        
         
         /// <summary>
         /// Reads an audio file at the specified path and returns it as a byte array.

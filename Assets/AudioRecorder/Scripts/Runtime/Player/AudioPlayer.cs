@@ -122,21 +122,9 @@ namespace Mayank.AudioRecorder.Player
         /// </summary>
         public async void SetAudioFile()
         {
-            // var audioClip = await FileReader.LoadWavFileAsAudioClip(Path.Combine(Recorder.Core.AudioRecorder.saveDirectoryPath, Recorder.Core.AudioRecorder.saveFileName + ".wav"));
             var audioClipFileReadingResultModel = await FileReader.LoadWavFileAsAudioClip(Path.Combine(Recorder.Core.AudioRecorder.saveDirectoryPath, Recorder.Core.AudioRecorder.saveFileName + ".wav"));
-            // audioSource.clip = audioClip;
-
-            // audioSource.clip = audioClipFileReadingResultModel.result;
-
             audioClip = audioClipFileReadingResultModel.result;
             UpdateClip();
-            
-            
-            // if (!audioClipFileReadingResultModel.status)
-            // {
-            //     consoleTe
-            // }
-
         }
     }
 }

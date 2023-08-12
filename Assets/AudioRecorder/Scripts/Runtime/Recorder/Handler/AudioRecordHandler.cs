@@ -163,7 +163,7 @@ namespace Mayank.AudioRecorder.Recorder.Handler
         /// Stops recording audio and saves the recorded audio file to disk.
         /// </summary>
         /// <param name="fileName">The intended name of the recorded audio file.</param>
-        private async UniTask StopRecording(string fileName = "Audio")
+        private async void StopRecording(string fileName = "Audio")
         {
             if (!Core.AudioRecorder.IsRecording) return;
             _recorderView.OnStopRecording();

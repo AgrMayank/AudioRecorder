@@ -57,7 +57,7 @@ namespace Mayank.AudioRecorder.Recorder.View
         /// </summary>
         /// <param name="button">The game object to scale.</param>
         /// <param name="scaleFactor">The amount to scale the game object by.</param>
-        private async UniTask ScaleOverTime(GameObject button, float scaleFactor)
+        private async void ScaleOverTime(GameObject button, float scaleFactor)
         {
             var originalScale = button.transform.localScale;
             var destinationScale = new Vector3(scaleFactor, scaleFactor, scaleFactor);
@@ -75,7 +75,7 @@ namespace Mayank.AudioRecorder.Recorder.View
         /// <summary>
         /// Updates the recording time by calculating the number of minutes and seconds elapsed since the start of the recording and displaying the result on the recording time text.
         /// </summary>
-        private async UniTask UpdateRecordingTime()
+        private async void UpdateRecordingTime()
         {
             while (Core.AudioRecorder.IsRecording)
             {

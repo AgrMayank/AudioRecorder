@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using Cysharp.Threading.Tasks;
 using Mayank.AudioRecorder.Utility;
 using UnityEngine;
 using UnityEngine.UI;
@@ -50,15 +51,55 @@ namespace Mayank.AudioRecorder.Player
         {
             _isPaused = false;
             SetPlayPauseImagesStatus(false);
+            SetAudioSliderValue();
         }
 
         /// <summary>
         /// Updates the audio playback and UI elements based on the current state.
         /// </summary>
-        private void Update()
+        // private void Update()
+        private void UpdateAAAA()
         {
             if (audioSource.isPlaying) SetAudioSliderValue();
-            if ((audioSlider.value <= audioSlider.maxValue && audioSlider.value >= audioSlider.minValue) || audioSource.isPlaying) return;
+            
+            
+            if (audioSource.clip == null) return;
+            
+            
+            
+            // if ((audioSlider.value <= audioSlider.maxValue && audioSlider.value >= audioSlider.minValue) || audioSource.isPlaying) return;
+            // if ((audioSlider.value < audioSlider.maxValue && audioSlider.value > audioSlider.minValue) || audioSource.isPlaying) return;
+            if (audioSource.isPlaying) return;
+            
+            // if (audioSlider.value < audioSlider.maxValue && audioSlider.value > audioSlider.minValue) return;
+            
+            // if (!_isPaused) return;
+            
+            // if (audioSource.stop)
+            
+            SetPlayPauseImagesStatus(false);
+            // PlayPauseAudio();
+            _isPaused = false;
+        }
+
+
+        /// <summary>
+        /// Updates the audio playback and UI elements based on the current state.
+        /// </summary>
+        private async void UpdateAudioPlayerView()
+        {
+            while (audioSource.isPlaying)
+            {
+                // if (audioSource.isPlaying) SetAudioSliderValue();
+                SetAudioSliderValue();
+                await UniTask.DelayFrame(1);
+            }
+            
+            
+            audioSource.Stop();
+            
+            
+            SetAudioSliderValue();
             SetPlayPauseImagesStatus(false);
             _isPaused = false;
         }
@@ -79,6 +120,9 @@ namespace Mayank.AudioRecorder.Player
         /// <param name="isPlaying">Indicates if the audio is currently playing or not.</param>
         private void SetPlayPauseImagesStatus(bool isPlaying)
         {
+            Debug.Log("isPlaying   :::    "+isPlaying);
+            
+            
             playImage.gameObject.SetActive(!isPlaying);
             pauseImage.gameObject.SetActive(isPlaying);
         }
@@ -109,11 +153,18 @@ namespace Mayank.AudioRecorder.Player
             {
                 SetPlayPauseImagesStatus(true);
                 audioSource.UnPause();
+                
+                
+                
+                UpdateAudioPlayerView();
             }
             else
             {
                 SetPlayPauseImagesStatus(true);
                 audioSource.Play();
+
+
+                UpdateAudioPlayerView();
             }
         }
 
@@ -125,6 +176,7 @@ namespace Mayank.AudioRecorder.Player
             var audioClipFileReadingResultModel = await FileReader.LoadWavFileAsAudioClip(Path.Combine(Recorder.Core.AudioRecorder.saveDirectoryPath, Recorder.Core.AudioRecorder.saveFileName + ".wav"));
             audioClip = audioClipFileReadingResultModel.result;
             UpdateClip();
+            SetAudioSliderValue();
         }
     }
 }

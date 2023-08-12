@@ -8,30 +8,11 @@ namespace Mayank.AudioRecorder.Utility
 {
     public static class FileReader
     {
-        public static async UniTask<byte[]> LoadFile(string filePath)
-        {
-            if (File.Exists(filePath))
-            {
-                Debug.unityLogger.Log("file exists at "+filePath);
-            }
-            else
-            {
-                Debug.unityLogger.LogError("File loading","file does not exist at "+filePath);
-                return null;
-            }
-
-            var fileBytes = await File.ReadAllBytesAsync(filePath);
-            return fileBytes;
-        }
-
-
-        public static async UniTask<AudioClip> LoadAudioClip(string filePath)
-        {
-            var fileBytes = await LoadWavFile(filePath);
-            AudioClip audioClip = AudioClip.Create("LoadedAudio", fileBytes.Length, 1, 44100, false);
-            return audioClip;
-        }
-
+        /// <summary>
+        /// Loads a WAV file from the specified path and converts it into an audio clip.
+        /// </summary>
+        /// <param name="filePath">The path of the WAV file.</param>
+        /// <returns>The result of loading the audio clip from the file path.</returns>
         public static async UniTask<AudioClipFileReadingResultModel> LoadWavFileAsAudioClip(string filePath)
         {
             var multimediaWebRequest = UnityWebRequestMultimedia.GetAudioClip(filePath, AudioType.WAV);
@@ -53,29 +34,6 @@ namespace Mayank.AudioRecorder.Utility
             }
 
             return audioClipFileReadingResultModel;
-        }
-        
-        public static async UniTask<byte[]> LoadWavFile(string filePath)
-        {
-            var fs = File.OpenRead(filePath);
-            var bytes = new byte[fs.Length];
-            var result = await fs.ReadAsync(bytes, 0, bytes.Length);
-            return bytes;
-        }
-        
-        /// <summary>
-        /// Reads an audio file at the specified path and returns it as a byte array.
-        /// </summary>
-        /// <param name="filePath">The path of the audio file to read.</param>
-        /// <param name="audioSourceSamples">The number of audio source samples.</param>
-        /// <param name="headerSize">The size of the audio file header.</param>
-        /// <returns>A byte array containing the audio data.</returns>
-        public static byte[] ConvertWavToByteArray(string filePath, int audioSourceSamples, int headerSize)
-        {
-            var bytes = new byte[audioSourceSamples + headerSize];
-            var fs = File.OpenRead(filePath);
-            fs.Read(bytes, 0, bytes.Length);
-            return bytes;
         }
     }
 }
